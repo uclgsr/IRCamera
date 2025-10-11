@@ -261,6 +261,7 @@ android {
                     "-opt-in=kotlin.RequiresOptIn",
                     "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                     "-opt-in=kotlinx.coroutines.FlowPreview",
+                    "-opt-in=androidx.camera.video.ExperimentalVideo",
                     "-Xjvm-default=all",
                     "-Xnested-type-aliases",
                 ),
@@ -310,7 +311,7 @@ tasks.matching { it.name.startsWith("connected") && it.name.endsWith("AndroidTes
 
 configurations.all {
     resolutionStrategy {
-        force("com.google.guava:guava:31.1-android")
+        force("com.google.guava:guava:33.3.1-jre")
         force("androidx.core:core:1.13.1")
         force("androidx.core:core-ktx:1.13.1")
         force("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
@@ -338,13 +339,12 @@ configurations.all {
 dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(libs.guava)
+    implementation("com.google.guava:guava:33.3.1-jre")
 
     // Hilt dependency injection
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    kapt(libs.guava)
-    kapt("com.google.guava:guava:33.0.0-jre")
+    kapt("com.google.guava:guava:33.3.1-jre")
     implementation(libs.hilt.navigation.compose)
 
     implementation(platform(libs.compose.bom))
@@ -445,7 +445,7 @@ configurations
     .configureEach {
         resolutionStrategy.eachDependency {
             if (requested.group == "com.google.guava" && requested.name == "guava") {
-                useTarget("com.google.guava:guava:33.0.0-jre")
+                useTarget("com.google.guava:guava:33.3.1-jre")
             }
         }
     }

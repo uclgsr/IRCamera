@@ -111,7 +111,7 @@ object AppLogger {
             when (level) {
                 LogLevel.VERBOSE, LogLevel.DEBUG -> StructuredLogger.LogLevel.DEBUG
                 LogLevel.INFO -> StructuredLogger.LogLevel.INFO
-                LogLevel.WARN -> StructuredLogger.LogLevel.WARNING
+                LogLevel.WARN -> StructuredLogger.LogLevel.WARN
                 LogLevel.ERROR -> StructuredLogger.LogLevel.ERROR
             }
         structuredLogger?.log(structuredLevel, component, "log_message", details)

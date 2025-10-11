@@ -18,11 +18,16 @@ class GsrSessionActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         orchestrator.start()
         setContent {
-            SessionDashboardScreen(
+            GsrApp(
                 sessionState = sessionStateStore.sessionSnapshot,
                 telemetryState = sessionStateStore.deviceTelemetry,
-                onStartSimulation = { orchestrator.launchSimulationSession() },
-                onStop = { orchestrator.stopSession() },
+                onStartSession = { config ->
+                    orchestrator.launchSimulationSession(
+                        modalities = config.enabledModalities(),
+                        label = config.resolvedLabel(),
+                    )
+                },
+                onStopSession = { orchestrator.stopSession() },
             )
         }
     }

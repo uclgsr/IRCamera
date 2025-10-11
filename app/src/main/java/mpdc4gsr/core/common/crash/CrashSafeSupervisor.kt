@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import mpdc4gsr.core.common.logging.StructuredLogger
 
 class CrashSafeSupervisor private constructor(
     private val context: Context,

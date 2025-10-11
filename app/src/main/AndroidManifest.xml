@@ -83,177 +83,25 @@
         android:required="true" />
 
     <application
-        android:name="mpdc4gsr.app.App"
-        android:allowBackup="true"
+        android:name="mpdc4gsr.gsr.GsrApplication"
+        android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="${app_name}"
         android:theme="@style/AppTheme"
-        tools:replace="android:label">
-        <!-- Optional backups hardening (uncomment after adding @xml/backup_rules files)
-        android:dataExtractionRules="@xml/backup_rules"
-        android:fullBackupContent="@xml/backup_rules_legacy"
-        -->
-
-        <!-- Jetpack Compose Activities -->
-        <activity android:name="mpdc4gsr.feature.control.settings.ui.PolicyComposeActivity" />
-        <activity android:name="mpdc4gsr.feature.control.settings.ui.VersionComposeActivity" />
-
-        <activity
-            android:name="mpdc4gsr.feature.control.settings.ui.SettingsComposeActivity"
-            android:exported="false"
-            android:label="Settings"
-            android:theme="@style/AppTheme" />
-
-        <!-- USB Receiver -->
-        <receiver
-            android:name="mpdc4gsr.feature.capture.thermal.ui.ThermalUsbReceiver"
-            android:exported="false">
-            <intent-filter android:priority="1000">
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
-                <action android:name="mpdc4gsr.USB_PERMISSION" />
-            </intent-filter>
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/ir_device_filter" />
-        </receiver>
-
-        <activity
-            android:name="mpdc4gsr.feature.connectivity.ui.DevicePairingComposeActivity"
-            android:exported="false"
-            android:label="Device Pairing"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.feature.connectivity.ui.NetworkClientTestComposeActivity"
-            android:exported="false"
-            android:label="Network Test"
-            android:theme="@style/AppTheme" />
+        tools:replace="android:label,android:allowBackup">
 
         <activity
             android:name="mpdc4gsr.gsr.ui.GsrSessionActivity"
-            android:exported="false"
-            android:label="GSR Session Dashboard"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <!-- Main Launcher Activity -->
-        <activity
-            android:name="mpdc4gsr.feature.dashboard.ui.MainComposeActivity"
             android:exported="true"
-            android:label="MPDC4GSR"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:label="@string/app_name"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Navigation Demo Activity -->
-        <activity
-            android:name="mpdc4gsr.compose.navigation.IRCameraNavHost"
-            android:exported="false"
-            android:label="IR Camera Navigation Demo"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <!-- Navigation Test Activity -->
-        <activity
-            android:name="mpdc4gsr.feature.testing.ui.NavigationTestActivity"
-            android:exported="false"
-            android:label="Navigation Test"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <!-- Comprehensive Integration Test Activity -->
-        <activity
-            android:name="mpdc4gsr.feature.testing.ui.ComprehensiveIntegrationTestActivity"
-            android:exported="false"
-            android:label="Integration Test Suite"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <!-- Test Activities - Migrated to Compose -->
-        <activity
-            android:name="mpdc4gsr.compose.testing.GSRBenchTestComposeActivity"
-            android:exported="false"
-            android:label="GSR Benchmark Test" />
-        <activity
-            android:name="mpdc4gsr.compose.testing.GSRDataIntegrityTestComposeActivity"
-            android:exported="false"
-            android:label="GSR Data Integrity Test" />
-        <activity
-            android:name="mpdc4gsr.compose.testing.GSRReconnectionTestComposeActivity"
-            android:exported="false"
-            android:label="GSR Reconnection Test" />
-        <activity
-            android:name="mpdc4gsr.compose.testing.ParallelRecordingTestComposeActivity"
-            android:exported="false"
-            android:label="Parallel Recording Test" />
-        <activity
-            android:name="mpdc4gsr.compose.testing.SessionLifecycleTestComposeActivity"
-            android:exported="false"
-            android:label="Session Lifecycle Test" />
-
-        <activity
-            android:name="mpdc4gsr.compose.testing.RawCaptureTestComposeActivity"
-            android:exported="false"
-            android:label="Raw Capture Test" />
-        <activity
-            android:name="mpdc4gsr.compose.testing.RgbCameraTestComposeActivity"
-            android:exported="false"
-            android:label="RGB Camera Test" />
-
-        <!-- Session and Synchronisation Activities -->
-        <activity
-            android:name="mpdc4gsr.sensors.gsr.CompleteSessionTrialActivity"
-            android:exported="false"
-            android:label="Complete Session Trial" />
-
-        <activity
-            android:name="mpdc4gsr.compose.testing.CrossModalSyncTestComposeActivity"
-            android:exported="false"
-            android:label="Cross Modal Sync Test" />
-        <activity
-            android:name="mpdc4gsr.sensors.gsr.SynchronizationTestActivity"
-            android:exported="false"
-            android:label="Synchronization Test" />
-        <activity
-            android:name="mpdc4gsr.compose.testing.TimeSynchronizationTestComposeActivity"
-            android:exported="false"
-            android:label="Time Synchronization Test" />
-
-        <!-- BLE and Permission Activities - Migrated to Compose -->
-        <activity
-            android:name="mpdc4gsr.compose.testing.BLEIntegrationTestComposeActivity"
-            android:exported="false"
-            android:label="BLE Integration Test" />
-
-        <!-- Jetpack Compose Activities -->
-        <activity
-            android:name="mpdc4gsr.feature.capture.gsr.ui.SensorDashboardComposeActivity"
-            android:exported="false"
-            android:label="Sensor Dashboard"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.feature.testing.ui.ComposeMigrationLauncherActivity"
-            android:exported="false"
-            android:label="Compose Migration Launcher"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/ir_device_filter" />
-        </activity>
-
-        <!-- Recording Service - PC networking and sensor recording -->
-        <service
-            android:name="mpdc4gsr.app.runtime.RecordingService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="camera|connectedDevice|dataSync" />
-        <!-- If the service records audio, use: camera|connectedDevice|dataSync|microphone -->
-
-        <!-- File Provider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

@@ -64,6 +64,8 @@ class FailoverThermalDataSource(
 
     override fun isSimulationMode(): Boolean = delegate.get().isSimulationMode()
 
+    override fun getLastRecordingPath(): String? = delegate.get().getLastRecordingPath()
+
     override suspend fun setTemperatureRange(
         min: Float,
         max: Float,

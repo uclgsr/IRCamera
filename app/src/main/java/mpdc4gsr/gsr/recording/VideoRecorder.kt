@@ -5,7 +5,6 @@ import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.ExperimentalVideo
 import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.Quality
@@ -37,7 +36,7 @@ import mpdc4gsr.gsr.model.RecorderKind
 import mpdc4gsr.gsr.model.RecorderState
 import mpdc4gsr.gsr.session.TimelineClock
 
-@OptIn(ExperimentalVideo::class)
+@Suppress("UnsafeOptInUsageError")
 class VideoRecorder(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
@@ -120,7 +119,14 @@ class VideoRecorder(
                     .setTargetResolution(Size(640, 360))
                     .build()
             preview.setSurfaceProvider { request ->
-                request.provideSurface(request.surface, backgroundExecutor) {}
+                val surfaceTexture = android.graphics.SurfaceTexture(0).apply {
+                    setDefaultBufferSize(request.resolution.width, request.resolution.height)
+                }
+                val surface = android.view.Surface(surfaceTexture)
+                request.provideSurface(surface, backgroundExecutor) {
+                    surface.release()
+                    surfaceTexture.release()
+                }
             }
             cameraProvider.bindToLifecycle(
                 lifecycleOwner,

@@ -189,7 +189,7 @@ object GsrModule {
     @Singleton
     fun provideSessionDirectoryProvider(
         @ApplicationContext context: Context,
-    ): () -> File = {
+    ): @JvmSuppressWildcards () -> File = {
         File(context.filesDir, "sessions").apply { mkdirs() }
     }
 
@@ -209,7 +209,7 @@ object GsrModule {
         previewPublisher: PreviewPublisher,
         thermalCoordinator: ThermalCaptureCoordinator,
         simulationSource: SimulationSource,
-        sessionDirectoryProvider: () -> File,
+        sessionDirectoryProvider: @JvmSuppressWildcards () -> File,
     ): GsrOrchestrator =
         GsrOrchestrator(
             context = context,

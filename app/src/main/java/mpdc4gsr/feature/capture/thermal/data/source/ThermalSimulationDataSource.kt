@@ -284,15 +284,18 @@ class ThermalSimulationDataSource(
                 val nx = x / width.toFloat()
                 val ny = y / height.toFloat()
                 val wave =
-                    (sin(2 * PI * (nx + timeSeconds / 6f)) +
-                        sin(2 * PI * (ny + timeSeconds / 9f)) +
-                        sin(PI * (nx + ny) + timeSeconds / 4f)) / 3f
+                    (
+                        sin(2 * PI * (nx + timeSeconds / 6f)) +
+                            sin(2 * PI * (ny + timeSeconds / 9f)) +
+                            sin(PI * (nx + ny) + timeSeconds / 4f)
+                    ).toFloat() / 3f
                 val jitter = (random.nextFloat() - 0.5f) * 0.06f
                 val normalized = ((wave + 1f) / 2f + jitter).coerceIn(0f, 1f)
-                val baseTemperature =
+                val baseTemperature: Float =
                     currentMinTemp +
                         (currentMaxTemp - currentMinTemp) * normalized * emissivityFactor * distanceFactor
-                val finalTemperature = baseTemperature + reflectedTemp * 0.01f
+                val finalTemperature =
+                    (baseTemperature + reflectedTemp * 0.01f)
                 matrix[y][x] = finalTemperature
                 if (finalTemperature < minTemp) minTemp = finalTemperature
                 if (finalTemperature > maxTemp) maxTemp = finalTemperature

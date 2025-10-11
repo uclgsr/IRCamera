@@ -316,9 +316,13 @@ class GsrOrchestrator(
         )
     }
 
-    fun launchSimulationSession(modalities: Set<RecorderKind> = RecorderKind.values().toSet()) {
+    fun launchSimulationSession(
+        modalities: Set<RecorderKind> = RecorderKind.values().toSet(),
+        label: String = "Simulation Session",
+    ) {
         scope.launch {
             val sessionId = "sim-${UUID.randomUUID()}"
+            val sessionLabel = label.ifBlank { "Simulation Session" }
             val command =
                 SessionCommand.StartRecording(
                     sessionId = sessionId,
@@ -326,7 +330,7 @@ class GsrOrchestrator(
                     scheduledTimeMillis = timelineClock.nowInstant().toEpochMilli(),
                     parameters =
                         mapOf(
-                            "label" to "Simulation Session",
+                            "label" to sessionLabel,
                             "simulation" to true,
                             "plannedDurationSeconds" to 300,
                         ),
