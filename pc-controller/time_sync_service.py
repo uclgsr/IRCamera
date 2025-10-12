@@ -71,9 +71,9 @@ class _TimeSyncHttpServer(ThreadingHTTPServer):
     daemon_threads = True
 
     def __init__(
-        self,
-        server_address: tuple[str, int],
-        service: "TimeSyncService",
+            self,
+            server_address: tuple[str, int],
+            service: "TimeSyncService",
     ) -> None:
         self.service = service
 

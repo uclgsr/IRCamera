@@ -1,16 +1,27 @@
 # IRCamera PC Controller
 
-The PC controller is the desktop orchestrator for the IRCamera research platform. It discovers Shimmer3 GSR sensors, coordinates Android capture devices, keeps everybody on the same clock and stores every modality in a manifest-backed session folder. A PyQt6 dashboard gives researchers a live view; a rich CLI is available for headless or scripted deployments.
+The PC controller is the desktop orchestrator for the IRCamera research platform. It discovers Shimmer3 GSR sensors,
+coordinates Android capture devices, keeps everybody on the same clock and stores every modality in a manifest-backed
+session folder. A PyQt6 dashboard gives researchers a live view; a rich CLI is available for headless or scripted
+deployments.
 
 ## Highlights
-- **Multi-device sensor hub**  manage Shimmer3 GSR sensors directly over BLE (via `bleak`), Android spokes, or deterministic simulation feeds when hardware is offline.
-- **Time synchronisation service** - built-in UDP time server plus the JSON SYNC protocol keep device clocks within the +/-5 ms requirement (FR3, NFR2).
-- **Session engine with manifest**  per-session metadata, events, rolling CSVs, file uploads with SHA-256 integrity and resumable queues (FR4, FR5, FR10).
-- **Stimulus & marker coordination**  trigger flash/audio sync cues, log experiment markers, and replay missed commands when devices reconnect (FR2, FR7, FR8).
-- **PyQt6 dashboard**  live device list, GSR plots, RGB/thermal previews, transfer logs, simulation toggle and instant stimulus controls (FR6, NFR6).
-- **Extensible CLI**  single entry point for discovery, start/stop, sync flashes, markers, and simulation control; ideal for automation.
+
+- **Multi-device sensor hub**  manage Shimmer3 GSR sensors directly over BLE (via `bleak`), Android spokes, or
+  deterministic simulation feeds when hardware is offline.
+- **Time synchronisation service** - built-in UDP time server plus the JSON SYNC protocol keep device clocks within the
+  +/-5 ms requirement (FR3, NFR2).
+- **Session engine with manifest**  per-session metadata, events, rolling CSVs, file uploads with SHA-256 integrity and
+  resumable queues (FR4, FR5, FR10).
+- **Stimulus & marker coordination**  trigger flash/audio sync cues, log experiment markers, and replay missed commands
+  when devices reconnect (FR2, FR7, FR8).
+- **PyQt6 dashboard**  live device list, GSR plots, RGB/thermal previews, transfer logs, simulation toggle and instant
+  stimulus controls (FR6, NFR6).
+- **Extensible CLI**  single entry point for discovery, start/stop, sync flashes, markers, and simulation control; ideal
+  for automation.
 
 ## Getting Started
+
 1. **Install dependencies**
    ```bash
    python -m venv .venv
@@ -42,6 +53,7 @@ The PC controller is the desktop orchestrator for the IRCamera research platform
    | `--cli` | Skip the GUI and enter the interactive CLI. |
 
 ## CLI Quick Reference
+
 Within the CLI (`python pc_controller.py --cli`) the following commands are available:
 
 ```
@@ -59,14 +71,19 @@ quit / exit                  Terminate the controller
 All CLI commands are idempotent and queued for offline devices where appropriate.
 
 ## GUI Quick Tour
-- **Controls row**  Start/Stop session, Sync devices, Export data, Flash sync, Audio beep, Add marker, Simulation toggle.
-- **Device list**  Status, advertised sensors, last heartbeat, session participation, last sync offset, instantaneous GSR rate and sample counts.
+
+- **Controls row**  Start/Stop session, Sync devices, Export data, Flash sync, Audio beep, Add marker, Simulation
+  toggle.
+- **Device list**  Status, advertised sensors, last heartbeat, session participation, last sync offset, instantaneous
+  GSR rate and sample counts.
 - **Telemetry tab**  Rolling GSR plot per device (colour-coded).
 - **Frames tab**  Latest RGB and thermal preview frames at a lightweight resolution.
 - **Log tab**  Timestamped event feed including stimuli, markers, file transfers, reconnects and command replays.
 
 ## Command Protocol
+
 Commands emitted to Android devices now carry a richer JSON envelope with unique IDs for acknowledgement.
+
 ```json
 {
   "type": "command",
@@ -80,9 +97,13 @@ Commands emitted to Android devices now carry a richer JSON envelope with unique
   }
 }
 ```
-Android clients reply with `command_ack` messages that echo the `commandId`, include a status (`"ok"` or `"error"`), and an optional message. Offline devices receive the same envelope on reconnect, so acknowledgements remain idempotent. A legacy `parameters` field is still included for backward compatibility.
+
+Android clients reply with `command_ack` messages that echo the `commandId`, include a status (`"ok"` or `"error"`), and
+an optional message. Offline devices receive the same envelope on reconnect, so acknowledgements remain idempotent. A
+legacy `parameters` field is still included for backward compatibility.
 
 ## Session Storage & Manifest
+
 Each recording lives under `<storage-dir>/<session-id>/`:
 
 - `session.json`  creation metadata (start time, configuration snapshot).
@@ -95,7 +116,9 @@ Each recording lives under `<storage-dir>/<session-id>/`:
 The storage layer writes to disk on receipt (no in-memory buffering) to satisfy NFR3/NFR4.
 
 ## Configuration Pointers
+
 See `config/config.yaml` for editable defaults:
+
 - `sensors`  BLE addresses/UUIDs for each Shimmer3 device.
 - `simulation`  defaults for dummy streams when hardware is absent.
 - `time_sync_service`  UDP host/port settings.
@@ -103,21 +126,29 @@ See `config/config.yaml` for editable defaults:
 - `session`  data root, metadata format, single-session guard.
 
 ## Troubleshooting
-- **BLE discovery fails**  ensure the host Bluetooth stack is enabled and run with the correct permissions; use `--simulate-sensors` to fall back to deterministic data.
-- **Time sync drifts**  confirm no firewall blocks UDP on the time sync port (default 47017) and that devices see the SYNC command log.
-- **TLS handshake issues**  regenerate the self-signed pair in `certificates/` or disable TLS with `--ssl` omitted during local development.
-- **Large uploads stall**  check `transfer.max_retries` and consult the manifest entry in `summary.json` for partial sizes/checksums.
+
+- **BLE discovery fails**  ensure the host Bluetooth stack is enabled and run with the correct permissions; use
+  `--simulate-sensors` to fall back to deterministic data.
+- **Time sync drifts**  confirm no firewall blocks UDP on the time sync port (default 47017) and that devices see the
+  SYNC command log.
+- **TLS handshake issues**  regenerate the self-signed pair in `certificates/` or disable TLS with `--ssl` omitted
+  during local development.
+- **Large uploads stall**  check `transfer.max_retries` and consult the manifest entry in `summary.json` for partial
+  sizes/checksums.
 
 Run the automated suite with:
+
 ```bash
 python -m unittest discover -s tests
 ```
 
 Generate a coverage report (uses `.coveragerc`):
+
 ```bash
 coverage run --rcfile=../.coveragerc -m unittest discover -s tests
 coverage report -m
 ```
+
 The tests cover protocol handling, storage integrity, the time sync service and sensor simulation behaviour.
 
 

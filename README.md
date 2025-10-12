@@ -88,7 +88,8 @@ Central documentation lives under `docs/`:
 ## Contributing
 
 - Use Kotlin coroutines with lifecycle-aware scopes; see existing `AppBaseViewModel` patterns.
-- Follow the Compose UI patterns established in `feature/**/ui` and keep view models in their sibling `presentation` packages.
+- Follow the Compose UI patterns established in `feature/**/ui` and keep view models in their sibling `presentation`
+  packages.
 - Record new sensors through the `SensorRecorder` interface and register them with the `RecordingService`.
 - Run lint, detekt, unit tests, and relevant Python tests before opening a pull request.
 

@@ -21,7 +21,7 @@ object EncodeYuvTools {
         when (colorFormat) {
             @Suppress("DEPRECATION")
             COLOR_FormatYUV420SemiPlanar,
-            ->
+                ->
                 encodeYUV420SP(
                     yuv,
                     argb,
@@ -31,7 +31,7 @@ object EncodeYuvTools {
 
             @Suppress("DEPRECATION")
             COLOR_FormatYUV420Planar,
-            ->
+                ->
                 encodeYUV420P(
                     yuv,
                     argb,
@@ -41,7 +41,7 @@ object EncodeYuvTools {
 
             @Suppress("DEPRECATION")
             COLOR_FormatYUV420PackedSemiPlanar,
-            ->
+                ->
                 encodeYUV420PSP(
                     yuv,
                     argb,
@@ -51,7 +51,7 @@ object EncodeYuvTools {
 
             @Suppress("DEPRECATION")
             COLOR_FormatYUV420PackedPlanar,
-            ->
+                ->
                 encodeYUV420PP(
                     yuv,
                     argb,
@@ -97,7 +97,7 @@ object EncodeYuvTools {
                         } else {
                             y
                         }
-                    ).toByte()
+                        ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[uvIndex++] =
                         (
@@ -108,7 +108,7 @@ object EncodeYuvTools {
                             } else {
                                 v
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[uvIndex++] =
                         (
                             if (u < 0) {
@@ -118,7 +118,7 @@ object EncodeYuvTools {
                             } else {
                                 u
                             }
-                        ).toByte()
+                            ).toByte()
                 }
                 index++
             }
@@ -153,7 +153,7 @@ object EncodeYuvTools {
                         } else {
                             y
                         }
-                    ).toByte()
+                        ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[vIndex++] =
                         (
@@ -164,7 +164,7 @@ object EncodeYuvTools {
                             } else {
                                 u
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[uIndex++] =
                         (
                             if (v < 0) {
@@ -174,7 +174,7 @@ object EncodeYuvTools {
                             } else {
                                 v
                             }
-                        ).toByte()
+                            ).toByte()
                 }
                 index++
             }
@@ -206,7 +206,7 @@ object EncodeYuvTools {
                         } else {
                             y
                         }
-                    ).toByte()
+                        ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[yIndex + 1] =
                         (
@@ -217,7 +217,7 @@ object EncodeYuvTools {
                             } else {
                                 v
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[yIndex + 3] =
                         (
                             if (u < 0) {
@@ -227,7 +227,7 @@ object EncodeYuvTools {
                             } else {
                                 u
                             }
-                        ).toByte()
+                            ).toByte()
                 }
                 if (index % 2 == 0) {
                     yIndex++
@@ -264,7 +264,7 @@ object EncodeYuvTools {
                             } else {
                                 y
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[yIndex + 1] =
                         (
                             if (v < 0) {
@@ -274,7 +274,7 @@ object EncodeYuvTools {
                             } else {
                                 v
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[vIndex + 1] =
                         (
                             if (u < 0) {
@@ -284,7 +284,7 @@ object EncodeYuvTools {
                             } else {
                                 u
                             }
-                        ).toByte()
+                            ).toByte()
                     yIndex++
                 } else if (j % 2 == 0 && index % 2 == 1) {
                     yuv420sp[yIndex++] =
@@ -296,7 +296,7 @@ object EncodeYuvTools {
                             } else {
                                 y
                             }
-                        ).toByte()
+                            ).toByte()
                 } else if (j % 2 == 1 && index % 2 == 0) {
                     yuv420sp[vIndex++] =
                         (
@@ -307,7 +307,7 @@ object EncodeYuvTools {
                             } else {
                                 y
                             }
-                        ).toByte()
+                            ).toByte()
                     vIndex++
                 } else if (j % 2 == 1 && index % 2 == 1) {
                     yuv420sp[vIndex++] =
@@ -319,7 +319,7 @@ object EncodeYuvTools {
                             } else {
                                 y
                             }
-                        ).toByte()
+                            ).toByte()
                 }
                 index++
             }

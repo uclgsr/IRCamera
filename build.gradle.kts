@@ -43,7 +43,7 @@ fun Project.configureKtlint() {
     extensions.configure<KtlintExtension> {
         android.set(
             pluginManager.hasPlugin("com.android.application") ||
-                    pluginManager.hasPlugin("com.android.library")
+                pluginManager.hasPlugin("com.android.library")
         )
         ignoreFailures.set(true)
         reporters {

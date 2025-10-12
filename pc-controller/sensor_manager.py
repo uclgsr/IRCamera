@@ -40,7 +40,6 @@ logger = logging.getLogger(__name__)
 SHIMMER_SERVICE_UUID = "0000fff0-0000-1000-8000-00805f9b34fb"
 SHIMMER_STREAM_UUID = "0000fff4-0000-1000-8000-00805f9b34fb"
 
-
 SampleCallback = Callable[[str, float, float], None]
 
 

@@ -313,7 +313,7 @@ private fun DrawScope.drawThermalData(
                     val tempValue = (
                         (thermalData[dataIndex].toInt() and 0xFF) or
                             ((thermalData[dataIndex + 1].toInt() and 0xFF) shl 8)
-                    )
+                        )
                     // Convert to color (simplified)
                     val normalizedTemp = (tempValue % 256) / 255f
                     val color =

@@ -773,7 +773,6 @@ class PCControllerCore:
     def toggle_simulation_mode(self) -> bool:
         return self.set_simulation_mode(not self.is_simulation_enabled())
 
-
     def start_server(self, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, use_ssl: bool = False) -> None:
         if self._network:
             raise RuntimeError("server already running")
@@ -819,7 +818,8 @@ class PCControllerCore:
         snapshot = dict(message)
         with self._lock:
             for device_id, record in self.devices.items():
-                if record.connection_id in {"", None} or record.connection_id == "local" or record.status == "connected":
+                if record.connection_id in {"",
+                                            None} or record.connection_id == "local" or record.status == "connected":
                     continue
                 queue = self._command_queue.setdefault(device_id, [])
                 queue.append(snapshot.copy())
@@ -867,11 +867,11 @@ class PCControllerCore:
             self._emit(ControllerEvent("command_replayed", device_id=device_id, payload=marker_command))
 
     def _build_command_message(
-        self,
-        command: str,
-        *,
-        requires_ack: bool = True,
-        **parameters: Any,
+            self,
+            command: str,
+            *,
+            requires_ack: bool = True,
+            **parameters: Any,
     ) -> Dict[str, Any]:
         return {
             "type": "command",
@@ -1394,10 +1394,10 @@ class PCControllerCore:
 
     def _handle_event_marker(self, device_id: str, message: Dict[str, Any]) -> None:
         code = (
-            self._extract_field(message, "code")
-            or self._extract_field(message, "marker_id")
-            or self._extract_field(message, "label")
-            or "event"
+                self._extract_field(message, "code")
+                or self._extract_field(message, "marker_id")
+                or self._extract_field(message, "label")
+                or "event"
         )
         ts_value = self._extract_field(message, "timestamp")
         try:
@@ -1624,7 +1624,7 @@ def handle_cli_command(controller: "PCControllerCore", raw: str) -> Tuple[bool, 
         return False, lines
 
     if cmd == "marker":
-        label = raw[len(parts[0]) :].strip()
+        label = raw[len(parts[0]):].strip()
         if not label:
             label = time.strftime("marker_%H%M%S")
         event = controller.mark_event(label)
@@ -1678,9 +1678,9 @@ try:  # pragma: no cover - GUI path exercised in integration tests
 except Exception:  # pragma: no cover - GUI optional
     GUI_AVAILABLE = False
 
+
     def run_gui(_: "PCControllerCore") -> None:
         raise RuntimeError("PyQt6 + pyqtgraph are required for the GUI")
-
 
 
 def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:

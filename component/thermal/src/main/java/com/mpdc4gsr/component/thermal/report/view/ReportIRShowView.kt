@@ -173,8 +173,8 @@ class ReportIRShowView : LinearLayout {
                 width * (drawable?.intrinsicHeight ?: 0).toFloat() / (
                     drawable?.intrinsicWidth
                         ?: 1
-                )
-            ).toInt()
+                    )
+                ).toInt()
         val layoutParams = ivImage.layoutParams
         layoutParams.width = width
         layoutParams.height = height
@@ -214,9 +214,9 @@ class ReportIRShowView : LinearLayout {
         tvTitlePoint4.isVisible = !clPoint1.isVisible && !clPoint2.isVisible && !clPoint3.isVisible
         tvTitlePoint5.isVisible =
             !clPoint1.isVisible &&
-            !clPoint2.isVisible &&
-            !clPoint3.isVisible &&
-            !clPoint4.isVisible
+                !clPoint2.isVisible &&
+                !clPoint3.isVisible &&
+                !clPoint4.isVisible
         val lineList = reportIRBean.line_data
         for (i in lineList.indices) {
             when (i) {
@@ -236,9 +236,9 @@ class ReportIRShowView : LinearLayout {
         tvTitleLine4.isVisible = !clLine1.isVisible && !clLine2.isVisible && !clLine3.isVisible
         tvTitleLine5.isVisible =
             !clLine1.isVisible &&
-            !clLine2.isVisible &&
-            !clLine3.isVisible &&
-            !clLine4.isVisible
+                !clLine2.isVisible &&
+                !clLine3.isVisible &&
+                !clLine4.isVisible
         val rectList = reportIRBean.surface_data
         for (i in rectList.indices) {
             when (i) {
@@ -258,9 +258,9 @@ class ReportIRShowView : LinearLayout {
         tvTitleRect4.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible
         tvTitleRect5.isVisible =
             !clRect1.isVisible &&
-            !clRect2.isVisible &&
-            !clRect3.isVisible &&
-            !clRect4.isVisible
+                !clRect2.isVisible &&
+                !clRect3.isVisible &&
+                !clRect4.isVisible
         if (rectList.isNotEmpty()) {
             when (rectList.size) {
                 1 -> hideLastLine(isLast, clRect1, rectList[0], TYPE_RECT)

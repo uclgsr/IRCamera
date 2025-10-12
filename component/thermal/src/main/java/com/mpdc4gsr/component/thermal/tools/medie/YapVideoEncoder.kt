@@ -254,7 +254,7 @@ class YapVideoEncoder(
                         } else {
                             mediaCodec!!.getOutputBuffer(encoderStatus)
                         }
-                    ) ?: error { "encoderOutputBuffer $encoderStatus was null" }
+                        ) ?: error { "encoderOutputBuffer $encoderStatus was null" }
                 if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0) {
                     bufferInfo.size = 0
                 }
@@ -352,7 +352,7 @@ class YapVideoEncoder(
                         } else {
                             y
                         }
-                    ).toByte()
+                        ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[uvIndex++] =
                         (
@@ -363,7 +363,7 @@ class YapVideoEncoder(
                             } else {
                                 v
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[uvIndex++] =
                         (
                             if (u < 0) {
@@ -373,7 +373,7 @@ class YapVideoEncoder(
                             } else {
                                 u
                             }
-                        ).toByte()
+                            ).toByte()
                 }
                 index++
             }
@@ -408,7 +408,7 @@ class YapVideoEncoder(
                         } else {
                             y
                         }
-                    ).toByte()
+                        ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[vIndex++] =
                         (
@@ -419,7 +419,7 @@ class YapVideoEncoder(
                             } else {
                                 u
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[uIndex++] =
                         (
                             if (v < 0) {
@@ -429,7 +429,7 @@ class YapVideoEncoder(
                             } else {
                                 v
                             }
-                        ).toByte()
+                            ).toByte()
                 }
                 index++
             }
@@ -461,7 +461,7 @@ class YapVideoEncoder(
                         } else {
                             y
                         }
-                    ).toByte()
+                        ).toByte()
                 if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[yIndex + 1] =
                         (
@@ -472,7 +472,7 @@ class YapVideoEncoder(
                             } else {
                                 v
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[yIndex + 3] =
                         (
                             if (u < 0) {
@@ -482,7 +482,7 @@ class YapVideoEncoder(
                             } else {
                                 u
                             }
-                        ).toByte()
+                            ).toByte()
                 }
                 if (index % 2 == 0) {
                     yIndex++
@@ -519,7 +519,7 @@ class YapVideoEncoder(
                             } else {
                                 y
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[yIndex + 1] =
                         (
                             if (v < 0) {
@@ -529,7 +529,7 @@ class YapVideoEncoder(
                             } else {
                                 v
                             }
-                        ).toByte()
+                            ).toByte()
                     yuv420sp[vIndex + 1] =
                         (
                             if (u < 0) {
@@ -539,7 +539,7 @@ class YapVideoEncoder(
                             } else {
                                 u
                             }
-                        ).toByte()
+                            ).toByte()
                     yIndex++
                 } else if (j % 2 == 0 && index % 2 == 1) {
                     yuv420sp[yIndex++] =
@@ -551,7 +551,7 @@ class YapVideoEncoder(
                             } else {
                                 y
                             }
-                        ).toByte()
+                            ).toByte()
                 } else if (j % 2 == 1 && index % 2 == 0) {
                     yuv420sp[vIndex++] =
                         (
@@ -562,7 +562,7 @@ class YapVideoEncoder(
                             } else {
                                 y
                             }
-                        ).toByte()
+                            ).toByte()
                     vIndex++
                 } else if (j % 2 == 1 && index % 2 == 1) {
                     yuv420sp[vIndex++] =
@@ -574,7 +574,7 @@ class YapVideoEncoder(
                             } else {
                                 y
                             }
-                        ).toByte()
+                            ).toByte()
                 }
                 index++
             }

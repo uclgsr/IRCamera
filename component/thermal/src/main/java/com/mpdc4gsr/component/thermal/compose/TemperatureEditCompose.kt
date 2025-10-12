@@ -481,11 +481,11 @@ sealed class TemperatureMeasurementResult(
         val position: Offset,
         val temperature: Float,
     ) : TemperatureMeasurementResult(
-            pointId,
-            "Point",
-            Color(0xFF2196F3),
-            Icons.Default.Place,
-        )
+        pointId,
+        "Point",
+        Color(0xFF2196F3),
+        Icons.Default.Place,
+    )
 
     data class Line(
         val lineId: String,
@@ -495,11 +495,11 @@ sealed class TemperatureMeasurementResult(
         val temperatureMin: Float,
         val temperatureAvg: Float,
     ) : TemperatureMeasurementResult(
-            lineId,
-            "Line",
-            Color(0xFF4CAF50),
-            Icons.Default.Timeline,
-        )
+        lineId,
+        "Line",
+        Color(0xFF4CAF50),
+        Icons.Default.Timeline,
+    )
 
     data class Rectangle(
         val rectId: String,
@@ -508,11 +508,11 @@ sealed class TemperatureMeasurementResult(
         val temperatureMin: Float,
         val temperatureAvg: Float,
     ) : TemperatureMeasurementResult(
-            rectId,
-            "Rectangle",
-            Color(0xFFFF9800),
-            Icons.Default.CropFree,
-        )
+        rectId,
+        "Rectangle",
+        Color(0xFFFF9800),
+        Icons.Default.CropFree,
+    )
 }
 
 @Composable
