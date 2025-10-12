@@ -14,63 +14,72 @@ workflow, failover data sources, and session-aware recording.
 ## Findings
 
 ### FR1 – Multi-Device Sensor Integration
-- ✅   The app now boots with a **failover thermal data source** (`FailoverThermalDataSource`)
-        that prefers physical Topdon hardware but automatically switches to the
-        deterministic simulation source when hardware is absent. Simulation
-        status is surfaced in the UI and status flows.
-- ⚠️   RGB/thermal alignment still happens post-recording; the live pipeline has
-        not yet fused RGB camera events with thermal sessions.
+
+- ✅ The app now boots with a **failover thermal data source** (`FailoverThermalDataSource`)
+  that prefers physical Topdon hardware but automatically switches to the
+  deterministic simulation source when hardware is absent. Simulation
+  status is surfaced in the UI and status flows.
+- ⚠️ RGB/thermal alignment still happens post-recording; the live pipeline has
+  not yet fused RGB camera events with thermal sessions.
 
 ### FR2/FR3 – Synchronous Multi-Modal Recording & Time Sync
+
 - ✅   `ThermalCaptureCoordinator` is invoked from the `RecordingService`
-        whenever the PC (or UI) starts/stops a session, so thermal recording now
-        participates in the single start/stop trigger alongside other sensors.
-- ✅   Thermal frame timestamps originate from `TimeManager.getCurrentTimestampMs()`,
-        keeping them aligned with the millisecond-offset maintained against the PC.
-- ⚠️   Sync signals (stimulus markers, flash events) are still forwarded only to
-        GSR/RGB components; thermal needs explicit hook-ups in the command layer.
+  whenever the PC (or UI) starts/stops a session, so thermal recording now
+  participates in the single start/stop trigger alongside other sensors.
+- ✅ Thermal frame timestamps originate from `TimeManager.getCurrentTimestampMs()`,
+  keeping them aligned with the millisecond-offset maintained against the PC.
+- ⚠️ Sync signals (stimulus markers, flash events) are still forwarded only to
+  GSR/RGB components; thermal needs explicit hook-ups in the command layer.
 
 ### FR5 – Data Recording & Storage
-- ✅   Thermal recordings are streamed to `.tcf` (hardware) / `.csv` (simulation)
-        files, migrated into the session’s `Thermal/` directory, and accompanied
-        by a JSON manifest capturing frame counts, min/max temperatures, and
-        simulation flags.
-- ✅   Each output file (data + manifest) is registered with
-        `DataManagementService`, so the PC manifest now includes the thermal artefacts.
-- ⚠️   Dual-stream capture with RGB is still handled independently; combined
-        post-processing manifests remain a TODO.
+
+- ✅ Thermal recordings are streamed to `.tcf` (hardware) / `.csv` (simulation)
+  files, migrated into the session’s `Thermal/` directory, and accompanied
+  by a JSON manifest capturing frame counts, min/max temperatures, and
+  simulation flags.
+- ✅ Each output file (data + manifest) is registered with
+  `DataManagementService`, so the PC manifest now includes the thermal artefacts.
+- ⚠️ Dual-stream capture with RGB is still handled independently; combined
+  post-processing manifests remain a TODO.
 
 ### FR6 – Monitoring UI
-- ✅   The Compose UI now reflects live coordinator status: connection mode,
-        simulation flag, frame counters, recording duration, and last file path.
-- ✅   Thermal telemetry is merged into the multi-modal preview pipeline via
-        `ThermalCaptureCoordinator`, so PC dashboards receive live spot-temperature
-        metrics alongside existing GSR/RGB feeds.
-- ⚠️   Battery/health metrics and remote time-sync quality are still missing
-        from the UI, and palette/AGC controls remain static placeholders.
+
+- ✅ The Compose UI now reflects live coordinator status: connection mode,
+  simulation flag, frame counters, recording duration, and last file path.
+- ✅ Thermal telemetry is merged into the multi-modal preview pipeline via
+  `ThermalCaptureCoordinator`, so PC dashboards receive live spot-temperature
+  metrics alongside existing GSR/RGB feeds.
+- ⚠️ Battery/health metrics and remote time-sync quality are still missing
+  from the UI, and palette/AGC controls remain static placeholders.
 
 ### FR7 – Sync Signals & JSON Command Protocol
-- ⚠️   Protocol handlers relay start/stop commands but do not yet emit or react
-        to sync pulses (flash, buzzer) for the thermal camera. This remains open.
+
+- ⚠️ Protocol handlers relay start/stop commands but do not yet emit or react
+  to sync pulses (flash, buzzer) for the thermal camera. This remains open.
 
 ### FR8 – Fault Tolerance
-- ✅   Streaming is supervised: reconnection attempts resume the flow, and
-        `DataManagementService` captures recovered files during controlled stops.
-- ⚠️   Automatic restart after USB hot-unplug still needs dedicated testing and
-        explicit retry logic.
+
+- ✅ Streaming is supervised: reconnection attempts resume the flow, and
+  `DataManagementService` captures recovered files during controlled stops.
+- ⚠️ Automatic restart after USB hot-unplug still needs dedicated testing and
+  explicit retry logic.
 
 ### FR9 – Calibration Utilities
-- ✅   The calibration screen now captures deterministic RGB/IR frame batches,
-        stores manifests, and exposes capture progress/error status to the user.
-- ⚠️   Actual reprojection error analysis and matrix persistence remain TODOs.
+
+- ✅ The calibration screen now captures deterministic RGB/IR frame batches,
+  stores manifests, and exposes capture progress/error status to the user.
+- ⚠️ Actual reprojection error analysis and matrix persistence remain TODOs.
 
 ### FR10 – Data Transfer & Aggregation
-- ✅   Thermal artefacts are registered in the session manifest with per-file
-        metadata, and hashes are computed via `DataManagementService`.
-- ⚠️   Automatic post-session transfer to the PC controller is not yet wired; it
-        still relies on the existing upload subsystem (future integration needed).
+
+- ✅ Thermal artefacts are registered in the session manifest with per-file
+  metadata, and hashes are computed via `DataManagementService`.
+- ⚠️ Automatic post-session transfer to the PC controller is not yet wired; it
+  still relies on the existing upload subsystem (future integration needed).
 
 ### NFR Highlights
+
 - NFR1/NFR7: Streaming and disk IO are off the main thread via the coordinator,
   but preview throttling/compression still needs tuning.
 - NFR2: Thermal timestamps now respect the shared offset, but periodic sync

@@ -42,7 +42,8 @@ class ConfigureAccuracyUseCase(
 class MeasureAreaUseCase(
     private val repository: ThermalRepository,
 ) {
-    suspend operator fun invoke(area: MeasurementArea): Result<MeasurementResult> = repository.getMeasurementForArea(area)
+    suspend operator fun invoke(area: MeasurementArea): Result<MeasurementResult> =
+        repository.getMeasurementForArea(area)
 }
 
 class PerformCalibrationUseCase(

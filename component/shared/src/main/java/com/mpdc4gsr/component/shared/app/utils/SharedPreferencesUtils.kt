@@ -310,7 +310,8 @@ object SharedPreferencesUtils {
         editor.apply()
     }
 
-    fun getSharedPreferences(context: Context): SharedPreferences = context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)
+    fun getSharedPreferences(context: Context): SharedPreferences =
+        context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)
 }
 
 

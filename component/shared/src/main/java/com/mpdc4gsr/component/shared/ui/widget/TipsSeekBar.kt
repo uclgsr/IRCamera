@@ -146,7 +146,7 @@ class TipsSeekBar :
             tvTips.measuredHeight + 5f.dpToPx(context).toInt() + (
                 seekBar.thumb?.intrinsicHeight
                     ?: seekBar.measuredHeight
-            )
+                )
         setMeasuredDimension(width, if (heightMode == MeasureSpec.EXACTLY) heightSize else height)
     }
 

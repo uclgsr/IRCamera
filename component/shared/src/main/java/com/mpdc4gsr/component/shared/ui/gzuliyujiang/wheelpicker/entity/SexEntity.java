@@ -77,7 +77,7 @@ public class SexEntity implements TextProvider, Serializable {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", english" + english + '\'' +
-                '}';
+                '}' ;
     }
 
 }

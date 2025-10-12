@@ -83,6 +83,7 @@ fun GsrApp(
                     val rationale: String,
                     val usedBy: MutableSet<FeaturePermissionArea>,
                 )
+
                 val aggregated = linkedMapOf<String, AggregatedPermission>()
                 monitoredFeatures.forEach { feature ->
                     feature.groups.forEach { group ->

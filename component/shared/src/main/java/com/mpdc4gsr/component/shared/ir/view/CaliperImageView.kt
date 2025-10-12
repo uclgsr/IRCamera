@@ -46,7 +46,7 @@ class CaliperImageView : AppCompatImageView {
                     context,
                     R.drawable.svg_ic_target_horizontal_person_green,
                 ) as? BitmapDrawable
-            )?.bitmap
+                )?.bitmap
         originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
         originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
         visibility = View.GONE

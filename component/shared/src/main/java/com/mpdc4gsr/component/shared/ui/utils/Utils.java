@@ -190,7 +190,7 @@ public abstract class Utils {
             charCount++;
 
             if (charCount == digitCount) {
-                out[ind--] = ',';
+                out[ind--] = ',' ;
                 charCount++;
                 decimalPointAdded = true;
 
@@ -214,12 +214,12 @@ public abstract class Utils {
         }
 
         if (zero) {
-            out[ind--] = '0';
+            out[ind--] = '0' ;
             charCount += 1;
         }
 
         if (neg) {
-            out[ind--] = '-';
+            out[ind--] = '-' ;
             charCount += 1;
         }
 

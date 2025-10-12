@@ -25,21 +25,37 @@ android {
             )
         }
     }
+    androidComponents {
+        beforeVariants { variant ->
+            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
+        }
+    }
     buildFeatures {
         buildConfig = true
         compose = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
         isCoreLibraryDesugaringEnabled = true
     }
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+            jvmTarget.set(
+                org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(
+                    libs.versions.jvmTargetApp.get()
+                )
+            )
         }
     }
-    buildToolsVersion = "35.0.0"
+    java {
+        toolchain {
+            languageVersion.set(
+                JavaLanguageVersion.of(
+                    libs.versions.javaVersionApp.get().toInt()
+                )
+            )
+        }
+    }
+    buildToolsVersion = libs.versions.buildToolsVersion.get()
 }
 dependencies {
     implementation(libs.identity.jvm)

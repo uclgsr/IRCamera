@@ -162,8 +162,8 @@ class FrameTool {
                             (temperatureBytes[j].toInt() and 0xff) + (
                                 temperatureBytes[j + 1]
                                     .toInt() and 0xff
-                            ) * 256
-                        ).toFloat()
+                                ) * 256
+                            ).toFloat()
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
                     if (temperature0 in customMinTemp..customMaxTemp) {
                         val rgb =

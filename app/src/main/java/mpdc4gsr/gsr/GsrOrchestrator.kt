@@ -65,7 +65,8 @@ class GsrOrchestrator(
 
     private val scope = CoroutineScope(ioDispatcher + SupervisorJob())
     private var activeRecordingContext: RecordingContext? = null
-    @Volatile private var started = false
+    @Volatile
+    private var started = false
     private val deviceSnapshotMutex = Mutex()
     private val deviceSnapshot = mutableMapOf<String, DeviceDescriptor>()
     private var lastThermalStatus: ThermalStatus? = null
@@ -94,6 +95,7 @@ class GsrOrchestrator(
                         sessionController.applyCommand(command)
                         scope.launch { notifyStimulusMarker(command) }
                     }
+
                     is SessionCommand.ApplyDeviceSnapshot -> sessionController.applyCommand(command)
                     is SessionCommand.UpdateRecorderState -> sessionController.applyCommand(command)
                     is SessionCommand.AppendFault -> sessionController.applyCommand(command)
@@ -356,7 +358,8 @@ class GsrOrchestrator(
         context.sessionDirectory.walkTopDown()
             .filter { it.isFile }
             .forEach { file ->
-                val modality = RecorderKind.values().firstOrNull { file.name.contains(it.name, true) }?.name ?: "unknown"
+                val modality =
+                    RecorderKind.values().firstOrNull { file.name.contains(it.name, true) }?.name ?: "unknown"
                 transferClient.uploadFile(context.sessionId, deviceId, file, modality)
             }
     }

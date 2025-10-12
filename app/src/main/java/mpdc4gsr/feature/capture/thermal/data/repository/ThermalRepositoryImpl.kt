@@ -45,7 +45,8 @@ class ThermalRepositoryImpl(
         maxTemp: Float,
     ): Result<Unit> = hardwareDataSource.setTemperatureRange(minTemp, maxTemp)
 
-    override suspend fun setColorPalette(palette: ColorPalette): Result<Unit> = hardwareDataSource.setColorPalette(palette)
+    override suspend fun setColorPalette(palette: ColorPalette): Result<Unit> =
+        hardwareDataSource.setColorPalette(palette)
 
     override suspend fun setAgcMode(mode: AgcMode): Result<Unit> = hardwareDataSource.setAgcMode(mode)
 

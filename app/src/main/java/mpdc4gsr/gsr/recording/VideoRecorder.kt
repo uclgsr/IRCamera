@@ -174,6 +174,7 @@ class VideoRecorder(
                     scope.launch { rollSegment(context) }
                 }
             }
+
             is VideoRecordEvent.Finalize -> {
                 if (event.hasError()) {
                     _state.value = RecorderState.FAILED

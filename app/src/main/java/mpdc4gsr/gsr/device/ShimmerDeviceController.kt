@@ -68,8 +68,10 @@ class ShimmerDeviceController(
     private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter = bluetoothManager.adapter
     private val shimmerHandler by lazy { ShimmerMsgHandler(Looper.getMainLooper()) }
-    @Volatile private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
-    @Volatile private var bluetoothReceiverRegistered = false
+    @Volatile
+    private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
+    @Volatile
+    private var bluetoothReceiverRegistered = false
     private val devicesMutex = Mutex()
     private val connectedDevices = mutableMapOf<String, Shimmer>()
     private val sequenceCounter = AtomicLong()
@@ -77,7 +79,8 @@ class ShimmerDeviceController(
     private val _devices = MutableStateFlow<Map<String, DeviceDescriptor>>(emptyMap())
     val devices: StateFlow<Map<String, DeviceDescriptor>> = _devices
 
-    private val _samples = MutableSharedFlow<GsrSample>(extraBufferCapacity = 1024, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _samples =
+        MutableSharedFlow<GsrSample>(extraBufferCapacity = 1024, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val samples: SharedFlow<GsrSample> = _samples.asSharedFlow()
 
     private val _telemetry = MutableStateFlow<Map<String, TelemetryState>>(emptyMap())
@@ -134,7 +137,7 @@ class ShimmerDeviceController(
                     }
                 }
             }
-    }
+        }
 
     init {
         lifecycleOwner.lifecycle.addObserver(this)
@@ -182,7 +185,6 @@ class ShimmerDeviceController(
         scanning = false
         bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
     }
-
 
 
     suspend fun connect(macAddress: String): Boolean =
@@ -276,9 +278,15 @@ class ShimmerDeviceController(
             return true
         }
         val scanGranted =
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) == PackageManager.PERMISSION_GRANTED
         val connectGranted =
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
         return scanGranted && connectGranted
     }
 
@@ -384,15 +392,18 @@ class ShimmerDeviceController(
                     getShimmer(address)
                     onDeviceConnected(address)
                 }
+
                 "CONNECTING" -> updateConnectionState(address, ConnectionState.CONNECTING)
                 "DISCONNECTED", "CONNECTION_LOST", "NONE" -> {
                     connectedDevices.remove(address)
                     onDeviceDisconnected(address)
                 }
+
                 "FAILED_TO_CONNECT" -> {
                     connectedDevices.remove(address)
                     updateConnectionState(address, ConnectionState.ERROR)
                 }
+
                 "CONNECTION_TIMEOUT" -> updateConnectionState(address, ConnectionState.ERROR)
                 else -> Unit
             }
@@ -426,8 +437,15 @@ class ShimmerDeviceController(
             val mac = payload.mBluetoothAddress ?: return
             when (msg.arg1) {
                 ShimmerBluetooth.NOTIFICATION_SHIMMER_FULLY_INITIALIZED -> onDeviceConnected(mac)
-                ShimmerBluetooth.NOTIFICATION_SHIMMER_STOP_STREAMING -> updateConnectionState(mac, ConnectionState.READY)
-                ShimmerBluetooth.NOTIFICATION_SHIMMER_START_STREAMING -> updateConnectionState(mac, ConnectionState.RECORDING)
+                ShimmerBluetooth.NOTIFICATION_SHIMMER_STOP_STREAMING -> updateConnectionState(
+                    mac,
+                    ConnectionState.READY
+                )
+
+                ShimmerBluetooth.NOTIFICATION_SHIMMER_START_STREAMING -> updateConnectionState(
+                    mac,
+                    ConnectionState.RECORDING
+                )
             }
         }
     }

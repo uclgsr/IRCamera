@@ -5,7 +5,6 @@
             A high-level diagram illustrating the smartphone-based system with attached sensors, the PC controller,
             and all communication links.
 
-
 ```mermaid
 graph TB
     subgraph "PC Controller Hub"

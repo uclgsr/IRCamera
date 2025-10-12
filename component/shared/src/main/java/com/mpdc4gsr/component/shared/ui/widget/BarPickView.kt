@@ -206,7 +206,7 @@ class BarPickView : View {
                         paint
                             .measureText(labelText)
                             .toInt() + 6f.dpToPx(context).toInt()
-                    )
+                        )
                 }
             val leftText = valueFormatListener.invoke(if (rotate == 0) min else max)
             val rightText = valueFormatListener.invoke(if (rotate == 0) max else min)
@@ -260,7 +260,7 @@ class BarPickView : View {
                     } else {
                         (barRect.bottom - progressHeight - thumbHeight / 2f)
                     }
-                ).toInt()
+                    ).toInt()
                     .coerceAtLeast(barRect.top.toInt())
                     .coerceAtMost(barRect.bottom.toInt() - thumbHeight)
             val bottom = top + thumbHeight

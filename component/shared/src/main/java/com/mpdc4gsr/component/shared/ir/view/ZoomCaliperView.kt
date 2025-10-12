@@ -55,7 +55,7 @@ class ZoomCaliperView :
                 context,
                 R.drawable.svg_ic_target_horizontal_person_green,
             ) as? BitmapDrawable
-        )?.bitmap
+            )?.bitmap
             ?: return
         originalBitmapWidth = originalBitmap.width.toFloat()
         originalBitmapHeight = originalBitmap.height.toFloat()
@@ -341,7 +341,7 @@ class ZoomCaliperView :
                 context,
                 targetIcon,
             ) as? BitmapDrawable
-        )?.bitmap ?: return
+            )?.bitmap ?: return
         (mTextureView as ImageView).setImageBitmap(originalBitmap)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             magnifier?.dismiss()

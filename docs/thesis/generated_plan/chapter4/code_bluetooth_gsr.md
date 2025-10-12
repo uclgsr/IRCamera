@@ -11,16 +11,17 @@
             updateConnectionState(macAddress, ConnectionState.RECORDING)
         }
     }
+
 }
 
 private inner class ShimmerMsgHandler(looper: Looper) : Handler(looper) {
-    override fun handleMessage(msg: Message) {
-        when (msg.what) {
-            ShimmerBluetooth.MSG_IDENTIFIER_STATE_CHANGE -> handleStateChange(msg.obj)
-            ShimmerBluetooth.MSG_IDENTIFIER_DATA_PACKET -> handleData(msg.obj as? ObjectCluster)
-            ShimmerBluetooth.MSG_IDENTIFIER_NOTIFICATION_MESSAGE -> handleNotification(msg)
-        }
-    }
+override fun handleMessage(msg: Message) {
+when (msg.what) {
+ShimmerBluetooth.MSG_IDENTIFIER_STATE_CHANGE -> handleStateChange(msg.obj)
+ShimmerBluetooth.MSG_IDENTIFIER_DATA_PACKET -> handleData(msg.obj as? ObjectCluster)
+ShimmerBluetooth.MSG_IDENTIFIER_NOTIFICATION_MESSAGE -> handleNotification(msg)
+}
+}
 
     private fun handleStateChange(payload: Any?) {
         val (stateName, mac) =
@@ -81,12 +82,13 @@ private inner class ShimmerMsgHandler(looper: Looper) : Handler(looper) {
             ShimmerBluetooth.NOTIFICATION_SHIMMER_START_STREAMING -> updateConnectionState(mac, ConnectionState.RECORDING)
         }
     }
+
 }
 
 private fun mapCluster(deviceId: String, cluster: ObjectCluster): GsrSample? {
-    val sensorNames = cluster.mSensorNames ?: return null
-    val calibrated = cluster.mCalData ?: return null
-    val uncalibrated = cluster.mUncalData
+val sensorNames = cluster.mSensorNames ?: return null
+val calibrated = cluster.mCalData ?: return null
+val uncalibrated = cluster.mUncalData
 
     val gsrIndex = sensorNames.indexOfFirst { it.contains("GSR", ignoreCase = true) }
     if (gsrIndex == -1 || gsrIndex !in calibrated.indices) return null
@@ -113,5 +115,6 @@ private fun mapCluster(deviceId: String, cluster: ObjectCluster): GsrSample? {
         skinTemperatureCelsius = skinTemperature,
         sequenceNumber = sequenceCounter.incrementAndGet(),
     )
+
 }
-        ```
+```

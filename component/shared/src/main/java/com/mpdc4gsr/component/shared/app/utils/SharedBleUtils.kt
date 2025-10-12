@@ -38,13 +38,14 @@ object SharedBleUtils {
                 (
                     (Character.digit(cleanHex[i], 16) shl 4) +
                         Character.digit(cleanHex[i + 1], 16)
-                ).toByte()
+                    ).toByte()
             i += 2
         }
         return data
     }
 
-    fun isBleSupported(context: Context): Boolean = context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+    fun isBleSupported(context: Context): Boolean =
+        context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
 
     fun isBluetoothEnabled(): Boolean {
         @Suppress("DEPRECATION")
@@ -164,8 +165,8 @@ object SharedBleUtils {
             characteristic.properties and (
                 BluetoothGattCharacteristic.PROPERTY_WRITE or
                     BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE
-            )
-        ) != 0
+                )
+            ) != 0
 
     fun calculateConnectionTimeout(rssi: Int): Long =
         when {

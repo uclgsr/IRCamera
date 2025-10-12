@@ -19,7 +19,7 @@ import com.mpdc4gsr.component.shared.ui.widget.seekbar.RangeSeekBar
 
 class ColorPickDialog(
     context: Context,
-    @ColorInt private var color: Int,
+    @param:ColorInt private var color: Int,
     var textSize: Int,
     var textSizeIsDP: Boolean = false,
 ) : Dialog(context, R.style.InfoDialog),

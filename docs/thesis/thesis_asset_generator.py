@@ -31,7 +31,6 @@ from docs.thesis.chapter6.requirements_evaluation import (  # type: ignore
     RequirementsEvaluationFramework,
 )
 
-
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -51,9 +50,9 @@ class ThesisAssetGenerator:
     """Central generator for all thesis assets."""
 
     def __init__(
-        self,
-        project_root: Optional[Path] = None,
-        output_root: Optional[Path] = None,
+            self,
+            project_root: Optional[Path] = None,
+            output_root: Optional[Path] = None,
     ) -> None:
         self.project_root = Path(project_root or ROOT_DIR)
         self.output_root = Path(
@@ -314,7 +313,7 @@ class ThesisAssetGenerator:
 
     @staticmethod
     def _render_markdown_table(
-        headers: Iterable[str], rows: Iterable[Iterable[str]]
+            headers: Iterable[str], rows: Iterable[Iterable[str]]
     ) -> str:
         headers_list = list(headers)
         header_row = "| " + " | ".join(headers_list) + " |"

@@ -36,7 +36,7 @@ fun ProgressDialog(
                     onDismiss
                 } else {
                 }
-            ) as () -> Unit,
+                ) as () -> Unit,
         properties =
             DialogProperties(
                 dismissOnBackPress = cancelable,

@@ -44,40 +44,41 @@
             delay(UDP_INTERVAL_MILLIS)
         }
     }
+
 }
 
 private suspend fun pollCalibration() {
-    while (scope.isActive) {
-        try {
-            val request =
-                Request.Builder()
-                    .url("$endpoint/time/calibration")
-                    .build()
-            val response = okHttpClient.newCall(request).execute()
-            response.use {
-                if (!it.isSuccessful) {
-                    Log.w(TAG, "Calibration endpoint failure: ${it.code}")
-                } else {
-                    val body = it.body?.string()
-                    if (body != null) {
-                        val calibration = json.decodeFromString(TimeCalibration.serializer(), body)
-                        val estimate =
-                            TimelineEstimate(
-                                referenceEpochMillis = calibration.referenceEpochMillis,
-                                offsetMillis = calibration.offsetMillis,
-                                roundTripMillis = calibration.roundTripMillis,
-                                driftPpm = calibration.driftPpm,
-                                accuracyMillis = calibration.accuracyMillis,
-                                lastUpdated = Instant.now(),
-                            )
-                        sessionController.updateTimelineEstimate(estimate)
-                    }
-                }
-            }
-        } catch (ex: Exception) {
-            Log.e(TAG, "Failed to poll calibration", ex)
-        }
-        delay(CALIBRATION_INTERVAL_MILLIS)
-    }
+while (scope.isActive) {
+try {
+val request =
+Request.Builder()
+.url("$endpoint/time/calibration")
+.build()
+val response = okHttpClient.newCall(request).execute()
+response.use {
+if (!it.isSuccessful) {
+Log.w(TAG, "Calibration endpoint failure: ${it.code}")
+} else {
+val body = it.body?.string()
+if (body != null) {
+val calibration = json.decodeFromString(TimeCalibration.serializer(), body)
+val estimate =
+TimelineEstimate(
+referenceEpochMillis = calibration.referenceEpochMillis,
+offsetMillis = calibration.offsetMillis,
+roundTripMillis = calibration.roundTripMillis,
+driftPpm = calibration.driftPpm,
+accuracyMillis = calibration.accuracyMillis,
+lastUpdated = Instant.now(),
+)
+sessionController.updateTimelineEstimate(estimate)
 }
-        ```
+}
+}
+} catch (ex: Exception) {
+Log.e(TAG, "Failed to poll calibration", ex)
+}
+delay(CALIBRATION_INTERVAL_MILLIS)
+}
+}
+```

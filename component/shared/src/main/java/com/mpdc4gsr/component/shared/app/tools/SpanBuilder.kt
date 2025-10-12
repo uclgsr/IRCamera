@@ -116,8 +116,8 @@ class SpanBuilder : SpannableStringBuilder {
 
     private class MyImageSpan(
         val context: Context,
-        @DrawableRes val resourceId: Int,
-        @Px val wantHeight: Int,
+        @param:DrawableRes val resourceId: Int,
+        @param:Px val wantHeight: Int,
     ) : ReplacementSpan() {
         private var weakReference: WeakReference<Drawable>? = null
 

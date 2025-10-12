@@ -337,7 +337,8 @@ graph TB
             f.write("\n\n## Architecture Principles\n\n")
             f.write("1. **Hub-and-Spoke Model**: PC acts as central coordinator for multiple Android devices\n")
             f.write("2. **Modular Design**: Each sensor has dedicated manager class for encapsulation\n")
-            f.write("3. **Synchronized Recording**: TimeSyncClient + TimelineClock maintain <15ms drift across sensors\n")
+            f.write(
+                "3. **Synchronized Recording**: TimeSyncClient + TimelineClock maintain <15ms drift across sensors\n")
             f.write("4. **Fault Tolerance**: System continues operation if individual sensors fail\n")
             f.write("5. **Scalable Protocol**: TCP/JSON protocol supports dynamic device addition\n")
 

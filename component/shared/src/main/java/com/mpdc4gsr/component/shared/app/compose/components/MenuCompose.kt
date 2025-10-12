@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 data class MenuTabItem(
-    @DrawableRes val iconRes: Int? = null,
+    @param:DrawableRes val iconRes: Int? = null,
     val icon: ImageVector? = null,
     val label: String = "",
     val isSelected: Boolean = false,
@@ -139,7 +139,10 @@ fun MenuFirstTab(
         remember(isObserveMode) {
             if (isObserveMode) {
                 listOf(
-                    MenuTabItem(iconRes = com.mpdc4gsr.component.shared.R.drawable.selector_menu_first_1, label = "Menu 1"),
+                    MenuTabItem(
+                        iconRes = com.mpdc4gsr.component.shared.R.drawable.selector_menu_first_1,
+                        label = "Menu 1"
+                    ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.component.shared.R.drawable.selector_menu_first_observe_2,
                         label = "Observe 2",
@@ -163,7 +166,10 @@ fun MenuFirstTab(
                 )
             } else {
                 listOf(
-                    MenuTabItem(iconRes = com.mpdc4gsr.component.shared.R.drawable.selector_menu_first_1, label = "Menu 1"),
+                    MenuTabItem(
+                        iconRes = com.mpdc4gsr.component.shared.R.drawable.selector_menu_first_1,
+                        label = "Menu 1"
+                    ),
                     MenuTabItem(
                         iconRes = com.mpdc4gsr.component.shared.R.drawable.selector_menu_first_2_5,
                         label = "Menu 2-5",

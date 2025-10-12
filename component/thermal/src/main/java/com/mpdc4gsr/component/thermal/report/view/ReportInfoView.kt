@@ -85,12 +85,12 @@ class ReportInfoView : LinearLayout {
         tvAmbientHumidity.text = conditionBean?.ambient_humidity
         viewLine2.isVisible =
             conditionBean?.is_ambient_humidity == 1 &&
-            (conditionBean.is_test_distance == 1 || conditionBean.is_emissivity == 1)
+                (conditionBean.is_test_distance == 1 || conditionBean.is_emissivity == 1)
         groupTestDistance.isVisible = conditionBean?.is_test_distance == 1
         tvTestDistance.text = conditionBean?.test_distance
         viewLine3.isVisible =
             conditionBean?.is_test_distance == 1 &&
-            conditionBean.is_emissivity == 1
+                conditionBean.is_emissivity == 1
         groupEmissivity.isVisible = conditionBean?.is_emissivity == 1
         tvEmissivity.text = conditionBean?.emissivity
     }

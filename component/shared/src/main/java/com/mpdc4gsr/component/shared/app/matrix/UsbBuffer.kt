@@ -39,8 +39,8 @@ class UsbBuffer {
                 (buf[offset + 1].toUByte())
                     .toInt()
                     .shl(8)
+                )
             )
-        )
 
     private fun isValidFrame(frame: ByteArray): Boolean {
         var i = 0

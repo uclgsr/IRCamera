@@ -5,13 +5,15 @@ import argparse, json, os, fnmatch
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-OPENERS = {'(' : ')', '[' : ']', '{' : '}'}
-CLOSERS = {')' : '(', ']' : '[', '}' : '{'}
+OPENERS = {'(': ')', '[': ']', '{': '}'}
+CLOSERS = {')': '(', ']': '[', '}': '{'}
+
 
 def _is_ident_char(ch: str) -> bool:
     return ch == '_' or ch.isalnum()
 
-def _skip_kotlin_template_expr(text: str, i: int, line: int, col: int) -> Tuple[int,int,int]:
+
+def _skip_kotlin_template_expr(text: str, i: int, line: int, col: int) -> Tuple[int, int, int]:
     """
     Called with i at position just after '${' (i points to first char after '{').
     Scans until the matching '}' accounting for nested braces, strings, and comments.
@@ -27,68 +29,96 @@ def _skip_kotlin_template_expr(text: str, i: int, line: int, col: int) -> Tuple[
     while i < n:
         ch = text[i]
         if ch == '\n':
-            line += 1; col = 0; in_line_comment = False; i += 1; continue
+            line += 1;
+            col = 0;
+            in_line_comment = False;
+            i += 1;
+            continue
         else:
             col += 1
 
         # inside block comment
         if block_comment_depth > 0:
-            if ch == '/' and i + 1 < n and text[i+1] == '*':
-                block_comment_depth += 1; i += 2; col += 1; continue
-            if ch == '*' and i + 1 < n and text[i+1] == '/':
-                block_comment_depth -= 1; i += 2; col += 1; continue
-            i += 1; continue
+            if ch == '/' and i + 1 < n and text[i + 1] == '*':
+                block_comment_depth += 1;
+                i += 2;
+                col += 1;
+                continue
+            if ch == '*' and i + 1 < n and text[i + 1] == '/':
+                block_comment_depth -= 1;
+                i += 2;
+                col += 1;
+                continue
+            i += 1;
+            continue
 
         if in_line_comment:
-            i += 1; continue
+            i += 1;
+            continue
 
         # string states within template code
         if s == 'raw':
             # allow templates inside raw strings too
             if ch == '$':
-                if i + 1 < n and text[i+1] == '{':
-                    i, line, col = _skip_kotlin_template_expr(text, i + 2, line, col + 1); continue
+                if i + 1 < n and text[i + 1] == '{':
+                    i, line, col = _skip_kotlin_template_expr(text, i + 2, line, col + 1);
+                    continue
                 else:
                     # $name
                     j = i + 1
                     while j < n and _is_ident_char(text[j]): j += 1
-                    col += (j - i - 1); i = j; continue
-            if ch == '"' and i + 2 < n and text[i+1] == '"' and text[i+2] == '"':
-                s = None; i += 3; col += 2; continue
-            i += 1; continue
+                    col += (j - i - 1);
+                    i = j;
+                    continue
+            if ch == '"' and i + 2 < n and text[i + 1] == '"' and text[i + 2] == '"':
+                s = None;
+                i += 3;
+                col += 2;
+                continue
+            i += 1;
+            continue
 
         if s == 'normal':
             if escape: escape = False; i += 1; continue
             if ch == '\\': escape = True; i += 1; continue
             if ch == '$':
-                if i + 1 < n and text[i+1] == '{':
-                    i, line, col = _skip_kotlin_template_expr(text, i + 2, line, col + 1); continue
+                if i + 1 < n and text[i + 1] == '{':
+                    i, line, col = _skip_kotlin_template_expr(text, i + 2, line, col + 1);
+                    continue
                 else:
                     j = i + 1
                     while j < n and _is_ident_char(text[j]): j += 1
-                    col += (j - i - 1); i = j; continue
+                    col += (j - i - 1);
+                    i = j;
+                    continue
             if ch == '"': s = None; i += 1; continue
-            i += 1; continue
+            i += 1;
+            continue
 
         if s == 'char':
             if escape: escape = False; i += 1; continue
             if ch == '\\': escape = True; i += 1; continue
             if ch == '\'': s = None; i += 1; continue
-            i += 1; continue
+            i += 1;
+            continue
 
         # not in string/comment
         if ch == '/' and i + 1 < n:
-            if text[i+1] == '/': in_line_comment = True; i += 2; col += 1; continue
-            if text[i+1] == '*': block_comment_depth += 1; i += 2; col += 1; continue
+            if text[i + 1] == '/': in_line_comment = True; i += 2; col += 1; continue
+            if text[i + 1] == '*': block_comment_depth += 1; i += 2; col += 1; continue
 
-        if ch == '"' and i + 2 < n and text[i+1] == '"' and text[i+2] == '"':
-            s = 'raw'; i += 3; col += 2; continue
+        if ch == '"' and i + 2 < n and text[i + 1] == '"' and text[i + 2] == '"':
+            s = 'raw';
+            i += 3;
+            col += 2;
+            continue
         if ch == '"': s = 'normal'; i += 1; continue
         if ch == '\'': s = 'char'; i += 1; continue
 
         if ch == '{': depth += 1; i += 1; continue
         if ch == '}':
-            depth -= 1; i += 1
+            depth -= 1;
+            i += 1
             if depth == 0: return i, line, col
             continue
 
@@ -97,16 +127,22 @@ def _skip_kotlin_template_expr(text: str, i: int, line: int, col: int) -> Tuple[
     # unterminated; return best-effort
     return i, line, col
 
+
 def scan_text(text: str, file_path: str) -> List[Dict]:
     issues: List[Dict] = []
     stack: List[Tuple[str, int, int]] = []
-    line = 1; col = 0; i = 0; n = len(text)
-    in_line_comment = False; block_comment_depth = 0
+    line = 1;
+    col = 0;
+    i = 0;
+    n = len(text)
+    in_line_comment = False;
+    block_comment_depth = 0
     in_string = None  # 'normal', 'raw', 'char'
 
     lines = text.splitlines()
+
     def ctx(ln: int) -> str:
-        return lines[ln-1][:200] if 1 <= ln <= len(lines) else ''
+        return lines[ln - 1][:200] if 1 <= ln <= len(lines) else ''
 
     def report(kind, msg, line_no, col_no, expected=None, found=None, open_line=None, open_col=None):
         issues.append({
@@ -121,33 +157,52 @@ def scan_text(text: str, file_path: str) -> List[Dict]:
         ch = text[i]
 
         if ch == '\n':
-            line += 1; col = 0; in_line_comment = False; i += 1; continue
+            line += 1;
+            col = 0;
+            in_line_comment = False;
+            i += 1;
+            continue
         else:
             col += 1
 
         # block comments
         if block_comment_depth > 0:
-            if ch == '/' and i + 1 < n and text[i+1] == '*':
-                block_comment_depth += 1; i += 2; col += 1; continue
-            if ch == '*' and i + 1 < n and text[i+1] == '/':
-                block_comment_depth -= 1; i += 2; col += 1; continue
-            i += 1; continue
+            if ch == '/' and i + 1 < n and text[i + 1] == '*':
+                block_comment_depth += 1;
+                i += 2;
+                col += 1;
+                continue
+            if ch == '*' and i + 1 < n and text[i + 1] == '/':
+                block_comment_depth -= 1;
+                i += 2;
+                col += 1;
+                continue
+            i += 1;
+            continue
 
         if in_line_comment:
-            i += 1; continue
+            i += 1;
+            continue
 
         # strings
         if in_string == 'raw':
             if ch == '$':
-                if i + 1 < n and text[i+1] == '{':
-                    i, line, col = _skip_kotlin_template_expr(text, i + 2, line, col + 1); continue
+                if i + 1 < n and text[i + 1] == '{':
+                    i, line, col = _skip_kotlin_template_expr(text, i + 2, line, col + 1);
+                    continue
                 else:
                     j = i + 1
                     while j < n and _is_ident_char(text[j]): j += 1
-                    col += (j - i - 1); i = j; continue
-            if ch == '"' and i + 2 < n and text[i+1] == '"' and text[i+2] == '"':
-                in_string = None; i += 3; col += 2; continue
-            i += 1; continue
+                    col += (j - i - 1);
+                    i = j;
+                    continue
+            if ch == '"' and i + 2 < n and text[i + 1] == '"' and text[i + 2] == '"':
+                in_string = None;
+                i += 3;
+                col += 2;
+                continue
+            i += 1;
+            continue
 
         if in_string == 'normal':
             if ch == '\\':
@@ -155,15 +210,21 @@ def scan_text(text: str, file_path: str) -> List[Dict]:
                 if i < n: col += 1; i += 1
                 continue
             if ch == '$':
-                if i + 1 < n and text[i+1] == '{':
-                    i, line, col = _skip_kotlin_template_expr(text, i + 2, line, col + 1); continue
+                if i + 1 < n and text[i + 1] == '{':
+                    i, line, col = _skip_kotlin_template_expr(text, i + 2, line, col + 1);
+                    continue
                 else:
                     j = i + 1
                     while j < n and _is_ident_char(text[j]): j += 1
-                    col += (j - i - 1); i = j; continue
+                    col += (j - i - 1);
+                    i = j;
+                    continue
             if ch == '"':
-                in_string = None; i += 1; continue
-            i += 1; continue
+                in_string = None;
+                i += 1;
+                continue
+            i += 1;
+            continue
 
         if in_string == 'char':
             if ch == '\\':
@@ -171,26 +232,38 @@ def scan_text(text: str, file_path: str) -> List[Dict]:
                 if i < n: col += 1; i += 1
                 continue
             if ch == '\'':
-                in_string = None; i += 1; continue
-            i += 1; continue
+                in_string = None;
+                i += 1;
+                continue
+            i += 1;
+            continue
 
         # comment starts
         if ch == '/' and i + 1 < n:
-            nxt = text[i+1]
+            nxt = text[i + 1]
             if nxt == '/': in_line_comment = True; i += 2; col += 1; continue
             if nxt == '*': block_comment_depth += 1; i += 2; col += 1; continue
 
         # string starts
-        if ch == '"' and i + 2 < n and text[i+1] == '"' and text[i+2] == '"':
-            in_string = 'raw'; i += 3; col += 2; continue
+        if ch == '"' and i + 2 < n and text[i + 1] == '"' and text[i + 2] == '"':
+            in_string = 'raw';
+            i += 3;
+            col += 2;
+            continue
         if ch == '"':
-            in_string = 'normal'; i += 1; continue
+            in_string = 'normal';
+            i += 1;
+            continue
         if ch == '\'':
-            in_string = 'char'; i += 1; continue
+            in_string = 'char';
+            i += 1;
+            continue
 
         # structural tokens
         if ch in OPENERS:
-            stack.append((ch, line, col)); i += 1; continue
+            stack.append((ch, line, col));
+            i += 1;
+            continue
 
         if ch in CLOSERS:
             if not stack:
@@ -200,7 +273,8 @@ def scan_text(text: str, file_path: str) -> List[Dict]:
                 if CLOSERS[ch] != open_ch:
                     report('mismatch', f'mismatched {ch} closes {open_ch}', line, col,
                            expected=OPENERS[open_ch], found=ch, open_line=open_line, open_col=open_col)
-            i += 1; continue
+            i += 1;
+            continue
 
         i += 1
 
@@ -213,13 +287,16 @@ def scan_text(text: str, file_path: str) -> List[Dict]:
 
     return issues
 
+
 def scan_file(path: Path) -> List[Dict]:
     try:
         text = path.read_text(encoding='utf-8', errors='replace')
     except Exception as e:
-        return [{'file': str(path), 'kind':'read_error','message': f'failed to read file: {e}',
-                 'line':0,'col':0,'expected':None,'found':None,'open_line':None,'open_col':None,'context':None}]
+        return [{'file': str(path), 'kind': 'read_error', 'message': f'failed to read file: {e}',
+                 'line': 0, 'col': 0, 'expected': None, 'found': None, 'open_line': None, 'open_col': None,
+                 'context': None}]
     return scan_text(text, file_path=str(path))
+
 
 def scan_repo(root: Path,
               extensions=('.kt', '.kts'),
@@ -238,20 +315,24 @@ def scan_repo(root: Path,
             issues.extend(scan_file(path))
     return issues
 
+
 def main():
-    ap = argparse.ArgumentParser(description='Detect unbalanced (), [], {} and unterminated strings/comments in Kotlin sources.')
+    ap = argparse.ArgumentParser(
+        description='Detect unbalanced (), [], {} and unterminated strings/comments in Kotlin sources.')
     ap.add_argument('path', nargs='?', default='.', help='repository root')
-    ap.add_argument('--exclude', nargs='*', default=['build','.gradle','.git','.idea','out','.mvn','.venv'])
-    ap.add_argument('--extensions', nargs='*', default=['.kt','.kts'])
-    ap.add_argument('--include-glob', nargs='*', default=None, help='only scan files matching these globs (relative to root)')
-    ap.add_argument('--exclude-glob', nargs='*', default=None, help='skip files matching these globs (relative to root)')
+    ap.add_argument('--exclude', nargs='*', default=['build', '.gradle', '.git', '.idea', 'out', '.mvn', '.venv'])
+    ap.add_argument('--extensions', nargs='*', default=['.kt', '.kts'])
+    ap.add_argument('--include-glob', nargs='*', default=None,
+                    help='only scan files matching these globs (relative to root)')
+    ap.add_argument('--exclude-glob', nargs='*', default=None,
+                    help='skip files matching these globs (relative to root)')
     ap.add_argument('--json', dest='json_out', default=None)
     ap.add_argument('--show-ok', action='store_true')
     ap.add_argument('--exit-zero', action='store_true')
     args = ap.parse_args()
 
     root = Path(args.path).resolve()
-    exts = tuple(e if e.startswith('.') else '.'+e for e in args.extensions)
+    exts = tuple(e if e.startswith('.') else '.' + e for e in args.extensions)
     issues = scan_repo(root, extensions=exts,
                        exclude_dirs=tuple(args.exclude),
                        include_globs=args.include_glob,
@@ -280,10 +361,11 @@ def main():
             print(f'{file}\n  OK\n')
 
     if args.json_out:
-        with open(args.json_out,'w',encoding='utf-8') as f: json.dump(issues, f, ensure_ascii=False, indent=2)
+        with open(args.json_out, 'w', encoding='utf-8') as f: json.dump(issues, f, ensure_ascii=False, indent=2)
         print(f'Wrote JSON report to {args.json_out}')
 
     raise SystemExit(0 if (args.exit_zero or not any(by_file.values())) else 1)
+
 
 if __name__ == '__main__':
     main()

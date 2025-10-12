@@ -62,7 +62,7 @@ object LocationUtils {
                 return@withContext (address.adminArea ?: "") + (
                     address.locality
                         ?: ""
-                ) + (address.subLocality ?: "") // --
+                    ) + (address.subLocality ?: "") // --
             } catch (e: Exception) {
                 e.printStackTrace()
                 return@withContext null

@@ -104,7 +104,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Emulate Bluetooth disconnection of Shimmer3 GSR during session. " +
-                                    "Test automatic reconnection and data gap measurement.",
+                                "Test automatic reconnection and data gap measurement.",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

@@ -3,10 +3,30 @@
             ## Table 2.2: Related Systems and Methods Comparison
 
             | System / Study | Sensor Modalities | Synchronization Method | Data Accuracy | Key Features | Limitations | Year |
+
 | --- | --- | --- | --- | --- | --- | --- |
-| **PhysioKit**<br/>(Reiter et al., 2023) | - ECG<br/>- PPG<br/>- EDA (GSR)<br/>- Respiration<br/>- Accelerometer | - Microcontroller hardware sync<br/>- Shared clock<br/>- Real-time streaming | - ECG: ±2 BPM<br/>- GSR: research-grade<br/>- 100-500 Hz sampling | - Open-source toolkit<br/>- Multi-user support<br/>- ML-driven quality checks<br/>- Real-time visualization | - No thermal imaging<br/>- Requires custom hardware<br/>- Complex assembly | 2023 |
-| **iBVP Dataset**<br/>(Cho et al., 2024) | - RGB facial video<br/>- Thermal facial video<br/>- Ear-PPG<br/>- Quality annotations | - Hardware trigger sync<br/>- Frame-level alignment<br/>- Manual validation | - Thermal: FLIR A655sc<br/>- RGB: HD camera<br/>- PPG: medical-grade | - High-quality dataset<br/>- Quality labels<br/>- Varied conditions<br/>- rPPG validation | - Face-focused only<br/>- No GSR<br/>- Expensive equipment<br/>- Lab-only setup | 2024 |
-| **PsychoPy + LSL** | - Custom sensors via LSL<br/>- Stimulus presentation<br/>- Behavioral responses | - LabStreamingLayer (LSL)<br/>- Network clock sync<br/>- Event markers | - Sub-ms stimulus timing<br/>- ±1ms typical | - Precise stimulus control<br/>- Multi-stream integration<br/>- Open-source platform | - Complex setup<br/>- No Android support<br/>- Requires dedicated PCs | N/A |
-| **FLIR Thermal Studies**<br/>(Zhang et al., 2021) | - FLIR thermal camera<br/>- Contact GSR sensor<br/>- Optional ECG | - Post-hoc alignment<br/>- Manual sync markers | - Thermal: 640×480 @0.02°C<br/>- GSR: research-grade | - High-resolution thermal<br/>- Proven stress detection | - Expensive ($15k+)<br/>- No real-time sync<br/>- Desktop-only | 2021 |
-| **Empatica E4 Wristband** | - EDA (GSR)<br/>- PPG<br/>- Accelerometer<br/>- Temperature | - Internal device clock<br/>- BLE timestamp alignment | - GSR: 0.001 μS resolution<br/>- PPG: 64 Hz<br/>- Temp: ±0.2°C | - Wearable, unobtrusive<br/>- Cloud analytics<br/>- Real-time BLE streaming | - Closed ecosystem<br/>- No thermal/RGB<br/>- Subscription costs | 2018 |
-| **Proposed System (This Work)** | - Thermal imaging (TC001)<br/>- RGB video<br/>- GSR via Shimmer3<br/>- Optional audio markers | - Software NTP-style sync<br/>- Unified timeline offsets<br/>- Remote triggers | - Thermal: 256×192 @ ±2°C<br/>- RGB: 1080p30<br/>- GSR: 128 Hz @ ±5 μS | - Smartphone-based<br/>- Remote orchestration<br/>- Portable & cost-effective<br/>- Multi-sensor fusion ready | - Requires Android device<br/>- Dependent on Wi-Fi quality | 2024 |
+| **PhysioKit**<br/>(Reiter et al., 2023) | - ECG<br/>- PPG<br/>- EDA (GSR)<br/>- Respiration<br/>- Accelerometer | -
+Microcontroller hardware sync<br/>- Shared clock<br/>- Real-time streaming | - ECG: ±2 BPM<br/>- GSR:
+research-grade<br/>- 100-500 Hz sampling | - Open-source toolkit<br/>- Multi-user support<br/>- ML-driven quality
+checks<br/>- Real-time visualization | - No thermal imaging<br/>- Requires custom hardware<br/>- Complex assembly |
+2023 |
+| **iBVP Dataset**<br/>(Cho et al., 2024) | - RGB facial video<br/>- Thermal facial video<br/>- Ear-PPG<br/>- Quality
+annotations | - Hardware trigger sync<br/>- Frame-level alignment<br/>- Manual validation | - Thermal: FLIR A655sc<br/>-
+RGB: HD camera<br/>- PPG: medical-grade | - High-quality dataset<br/>- Quality labels<br/>- Varied conditions<br/>- rPPG
+validation | - Face-focused only<br/>- No GSR<br/>- Expensive equipment<br/>- Lab-only setup | 2024 |
+| **PsychoPy + LSL** | - Custom sensors via LSL<br/>- Stimulus presentation<br/>- Behavioral responses | -
+LabStreamingLayer (LSL)<br/>- Network clock sync<br/>- Event markers | - Sub-ms stimulus timing<br/>- ±1ms typical | -
+Precise stimulus control<br/>- Multi-stream integration<br/>- Open-source platform | - Complex setup<br/>- No Android
+support<br/>- Requires dedicated PCs | N/A |
+| **FLIR Thermal Studies**<br/>(Zhang et al., 2021) | - FLIR thermal camera<br/>- Contact GSR sensor<br/>- Optional
+ECG | - Post-hoc alignment<br/>- Manual sync markers | - Thermal: 640×480 @0.02°C<br/>- GSR: research-grade | -
+High-resolution thermal<br/>- Proven stress detection | - Expensive ($15k+)<br/>- No real-time sync<br/>- Desktop-only |
+2021 |
+| **Empatica E4 Wristband** | - EDA (GSR)<br/>- PPG<br/>- Accelerometer<br/>- Temperature | - Internal device
+clock<br/>- BLE timestamp alignment | - GSR: 0.001 μS resolution<br/>- PPG: 64 Hz<br/>- Temp: ±0.2°C | - Wearable,
+unobtrusive<br/>- Cloud analytics<br/>- Real-time BLE streaming | - Closed ecosystem<br/>- No thermal/RGB<br/>-
+Subscription costs | 2018 |
+| **Proposed System (This Work)** | - Thermal imaging (TC001)<br/>- RGB video<br/>- GSR via Shimmer3<br/>- Optional
+audio markers | - Software NTP-style sync<br/>- Unified timeline offsets<br/>- Remote triggers | - Thermal: 256×192 @
+±2°C<br/>- RGB: 1080p30<br/>- GSR: 128 Hz @ ±5 μS | - Smartphone-based<br/>- Remote orchestration<br/>- Portable &
+cost-effective<br/>- Multi-sensor fusion ready | - Requires Android device<br/>- Dependent on Wi-Fi quality | 2024 |

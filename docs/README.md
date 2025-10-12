@@ -16,7 +16,8 @@ Use this index to navigate the active documentation for MPDC4GSR.
 - [Recording Session Sequence](diagrams/recording-session-sequence.md) – Command and capture orchestration timeline.
 - [Data Pipeline Overview](diagrams/data-pipeline.md) – Sensor artefact flow and ingestion paths.
 - [Time Sync Sequence](diagrams/time-sync-sequence.md) – UDP and HTTP calibration exchange.
-- [Time Sync Components](diagrams/time-sync-components.md) – Responsibilities across clients, timeline smoothing, and PC services.
+- [Time Sync Components](diagrams/time-sync-components.md) – Responsibilities across clients, timeline smoothing, and PC
+  services.
 
 ## Developer Guides
 

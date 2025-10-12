@@ -133,7 +133,7 @@ fun ShutterDialog(
                     onDismiss
                 } else {
                 }
-            ) as () -> Unit,
+                ) as () -> Unit,
         properties =
             DialogProperties(
                 dismissOnBackPress = !isCalibrating,

@@ -111,8 +111,8 @@ class NetworkConnectionDropTest : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Initiate recording via PC control, then simulate network drop " +
-                                    "(PC disconnect) during active session. Verify recording continues " +
-                                    "uninterrupted without data loss.",
+                                "(PC disconnect) during active session. Verify recording continues " +
+                                "uninterrupted without data loss.",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -131,11 +131,11 @@ class NetworkConnectionDropTest : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "1. Start recording with PC controller connected\n" +
-                                    "2. After 15-30 seconds, disconnect PC (close connection or shut down)\n" +
-                                    "3. Observe network connection loss detection\n" +
-                                    "4. Verify recording continues on phone\n" +
-                                    "5. Wait to observe reconnection attempts\n" +
-                                    "6. Stop recording manually to complete test",
+                                "2. After 15-30 seconds, disconnect PC (close connection or shut down)\n" +
+                                "3. Observe network connection loss detection\n" +
+                                "4. Verify recording continues on phone\n" +
+                                "5. Wait to observe reconnection attempts\n" +
+                                "6. Stop recording manually to complete test",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

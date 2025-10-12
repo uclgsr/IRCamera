@@ -48,7 +48,8 @@ class GsrRecorder(
     @Volatile
     private var sessionContext: RecordingContext? = null
 
-    private val _latestSample = MutableSharedFlow<GsrSample>(extraBufferCapacity = 8, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _latestSample =
+        MutableSharedFlow<GsrSample>(extraBufferCapacity = 8, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val latestSample = _latestSample
 
     override suspend fun prepare(context: RecordingContext) {

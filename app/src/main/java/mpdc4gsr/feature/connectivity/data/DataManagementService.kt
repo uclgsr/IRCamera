@@ -15,55 +15,55 @@ import javax.inject.Singleton
  */
 @Singleton
 class DataManagementService
-    @Inject
-    constructor(
-        @ApplicationContext private val context: Context,
-    ) {
+@Inject
+constructor(
+    @param:ApplicationContext private val context: Context,
+) {
 
-        private val sessions = ConcurrentHashMap<String, SessionRecord>()
+    private val sessions = ConcurrentHashMap<String, SessionRecord>()
 
-        fun initialize() {
-            storageRoot().mkdirs()
-        }
-
-        fun createSession(
-            sessionId: String,
-            deviceId: String,
-            customMetadata: Map<String, Any?> = emptyMap(),
-        ): SessionRecord {
-            val record =
-                SessionRecord(
-                    sessionId = sessionId,
-                    deviceId = deviceId,
-                    directory = storageRoot().resolve(sessionId).apply { mkdirs() },
-                    metadata = customMetadata.toMutableMap(),
-                )
-            sessions[sessionId] = record
-            return record
-        }
-
-        fun getSession(sessionId: String): SessionRecord? = sessions[sessionId]
-
-        fun registerFile(
-            filePath: String,
-            sessionId: String,
-            deviceId: String,
-            fileType: String,
-            customMetadata: Map<String, Any?> = emptyMap(),
-        ) {
-            val record = sessions.getOrPut(sessionId) {
-                createSession(sessionId, deviceId)
-            }
-            record.files[filePath] =
-                FileRecord(
-                    filePath = filePath,
-                    fileType = fileType,
-                    metadata = customMetadata.toMutableMap(),
-                )
-        }
-
-        private fun storageRoot(): File = File(context.filesDir, "sessions_archive")
+    fun initialize() {
+        storageRoot().mkdirs()
     }
+
+    fun createSession(
+        sessionId: String,
+        deviceId: String,
+        customMetadata: Map<String, Any?> = emptyMap(),
+    ): SessionRecord {
+        val record =
+            SessionRecord(
+                sessionId = sessionId,
+                deviceId = deviceId,
+                directory = storageRoot().resolve(sessionId).apply { mkdirs() },
+                metadata = customMetadata.toMutableMap(),
+            )
+        sessions[sessionId] = record
+        return record
+    }
+
+    fun getSession(sessionId: String): SessionRecord? = sessions[sessionId]
+
+    fun registerFile(
+        filePath: String,
+        sessionId: String,
+        deviceId: String,
+        fileType: String,
+        customMetadata: Map<String, Any?> = emptyMap(),
+    ) {
+        val record = sessions.getOrPut(sessionId) {
+            createSession(sessionId, deviceId)
+        }
+        record.files[filePath] =
+            FileRecord(
+                filePath = filePath,
+                fileType = fileType,
+                metadata = customMetadata.toMutableMap(),
+            )
+    }
+
+    private fun storageRoot(): File = File(context.filesDir, "sessions_archive")
+}
 
 data class SessionRecord(
     val sessionId: String,

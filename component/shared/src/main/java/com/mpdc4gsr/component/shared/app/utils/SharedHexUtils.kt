@@ -33,7 +33,7 @@ object SharedHexUtils {
                             cleanHex[i + 1],
                             16,
                         )
-                ).toByte()
+                    ).toByte()
             i += 2
         }
         return data

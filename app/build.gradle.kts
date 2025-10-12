@@ -248,14 +248,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
         isCoreLibraryDesugaringEnabled = true
     }
 
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+            jvmTarget.set(
+                org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(
+                    libs.versions.jvmTargetApp.get()
+                )
+            )
             freeCompilerArgs.addAll(
                 listOf(
                     "-opt-in=kotlin.RequiresOptIn",
@@ -276,14 +278,16 @@ android {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(21))
+            languageVersion.set(
+                JavaLanguageVersion.of(
+                    libs.versions.javaVersionApp.get().toInt()
+                )
+            )
         }
     }
 
     buildFeatures {
         buildConfig = true
-//        dataBinding = true  // Disabled - migrated to Jetpack Compose
-//        viewBinding = true  // Disabled - migrated to Jetpack Compose
         compose = true
     }
 
@@ -291,7 +295,7 @@ android {
         includeInApk = false
         includeInBundle = false
     }
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = libs.versions.buildToolsVersion.get()
 
     testOptions {
         unitTests.all {
@@ -482,3 +486,18 @@ fun getYearStr(): String = SimpleDateFormat("yy", Locale.getDefault()).format(Da
 fun getDayStr(): String = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 
 fun getTimeStr(): String = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
+
+// Task aliases for compatibility with standard Java task names
+// Android projects don't have 'compileJava' or 'testClasses' tasks by default
+// These aliases map them to the Debug variant tasks for development convenience
+tasks.register("compileJava") {
+    group = "build"
+    description = "Alias for compileDebugJavaWithJavac (Android projects don't have a generic compileJava task)"
+    dependsOn("compileDebugJavaWithJavac")
+}
+
+tasks.register("testClasses") {
+    group = "build"
+    description = "Alias for compileDebugUnitTestJavaWithJavac (Android projects don't have a generic testClasses task)"
+    dependsOn("compileDebugUnitTestJavaWithJavac")
+}

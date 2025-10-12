@@ -48,6 +48,7 @@ import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+
 /**
  * Persistent command channel to the PC orchestrator. Uses a TLS WebSocket with JSON payloads. The
  * client automatically reconnects and emits parsed [SessionCommand] instances to the session layer.
@@ -200,12 +201,14 @@ class CommandClient(
                 val snapshot = parseDeviceSnapshot(envelope.payload)
                 _events.emit(SessionCommand.ApplyDeviceSnapshot(snapshot))
             }
+
             "timeline_update" -> {
                 val timeline = parseTimeline(envelope.payload)
                 sessionStateStore.sessionSnapshot.value?.let {
                     _events.emit(SessionCommand.AppendFault(SessionFaultFactory.timeline(timeline)))
                 }
             }
+
             else -> Log.w(TAG, "Unhandled command type: ${envelope.type}")
         }
     }
@@ -403,7 +406,8 @@ private object DeviceDescriptorFactory {
 private object TimelineEstimateFactory {
     fun fromPayload(payload: JsonObject): TimelineEstimate =
         TimelineEstimate(
-            referenceEpochMillis = payload["referenceEpochMillis"]?.jsonPrimitive?.longOrNull ?: System.currentTimeMillis(),
+            referenceEpochMillis = payload["referenceEpochMillis"]?.jsonPrimitive?.longOrNull
+                ?: System.currentTimeMillis(),
             offsetMillis = payload["offsetMillis"]?.jsonPrimitive?.doubleOrNull ?: 0.0,
             roundTripMillis = payload["roundTripMillis"]?.jsonPrimitive?.doubleOrNull ?: 0.0,
             driftPpm = payload["driftPpm"]?.jsonPrimitive?.doubleOrNull ?: 0.0,
@@ -428,6 +432,7 @@ private fun Any?.toJsonElement(): JsonElement? =
                 }.toMap()
             JsonObject(content)
         }
+
         is Iterable<*> -> JsonArray(this.mapNotNull { it.toJsonElement() })
         is Array<*> -> JsonArray(this.mapNotNull { it.toJsonElement() })
         is Enum<*> -> JsonPrimitive(this.name)
@@ -447,6 +452,7 @@ private fun JsonElement.toKotlinValue(): Any? =
             this.contentOrNull != null -> this.contentOrNull
             else -> null
         }
+
         is JsonArray -> this.mapNotNull { it.toKotlinValue() }
         is JsonObject -> this.toKotlinMap()
         else -> null

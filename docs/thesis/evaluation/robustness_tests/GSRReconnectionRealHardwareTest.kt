@@ -110,7 +110,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Perform live test where GSR device is intentionally turned off or " +
-                                    "taken out of range during recording. Monitor auto-reconnection behavior.",
+                                "taken out of range during recording. Monitor auto-reconnection behavior.",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -129,11 +129,11 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "1. Start recording with GSR device connected\n" +
-                                    "2. After 15-30 seconds, turn off GSR device or move out of range\n" +
-                                    "3. Wait for disconnection detection\n" +
-                                    "4. Turn device back on or move back in range\n" +
-                                    "5. Observe auto-reconnection\n" +
-                                    "6. Stop recording to complete test",
+                                "2. After 15-30 seconds, turn off GSR device or move out of range\n" +
+                                "3. Wait for disconnection detection\n" +
+                                "4. Turn device back on or move back in range\n" +
+                                "5. Observe auto-reconnection\n" +
+                                "6. Stop recording to complete test",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

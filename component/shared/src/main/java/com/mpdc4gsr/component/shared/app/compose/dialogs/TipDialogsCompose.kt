@@ -45,7 +45,7 @@ fun TipDialog(
                     onDismiss
                 } else {
                 }
-            ) as () -> Unit,
+                ) as () -> Unit,
         properties =
             DialogProperties(
                 dismissOnBackPress = cancelable,

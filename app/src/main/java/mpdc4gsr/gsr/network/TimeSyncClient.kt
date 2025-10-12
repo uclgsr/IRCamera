@@ -50,9 +50,12 @@ class TimeSyncClient(
 
     private val scope = CoroutineScope(dispatcher + SupervisorJob())
     private var udpJob: Job? = null
-    @Volatile private var started = false
-    @Volatile private var lastPublishedAtMillis = 0L
-    @Volatile private var lastPublishedAccuracy = Double.MAX_VALUE
+    @Volatile
+    private var started = false
+    @Volatile
+    private var lastPublishedAtMillis = 0L
+    @Volatile
+    private var lastPublishedAccuracy = Double.MAX_VALUE
 
     fun start() {
         if (started) return
@@ -246,9 +249,10 @@ class TimeSyncClient(
                                     sessionController.updateTimelineEstimate(estimate)
                                 }
                             }
+
                             else -> Log.d(TAG, "Calibration endpoint returned ${response.code}")
                         }
-                }
+                    }
             } catch (ex: Exception) {
                 Log.e(TAG, "Failed to poll calibration", ex)
             }

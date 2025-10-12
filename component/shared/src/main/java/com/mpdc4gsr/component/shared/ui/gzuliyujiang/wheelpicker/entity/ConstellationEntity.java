@@ -99,7 +99,7 @@ public class ConstellationEntity implements TextProvider, Serializable {
                 ", endDate='" + endDate + '\'' +
                 ", name='" + name + '\'' +
                 ", english" + english + '\'' +
-                '}';
+                '}' ;
     }
 
 }

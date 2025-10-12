@@ -78,7 +78,8 @@ object SharedCleanupUtils {
     }
 
     // ==================== FINAL COMPONENT CONSOLIDATION ====================
-    fun calculateThermalAverage(temperatures: FloatArray): Float = if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
+    fun calculateThermalAverage(temperatures: FloatArray): Float =
+        if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
 
     fun findThermalHotspot(
         temperatures: FloatArray,

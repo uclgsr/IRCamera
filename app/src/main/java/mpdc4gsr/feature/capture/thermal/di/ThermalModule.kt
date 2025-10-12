@@ -50,7 +50,8 @@ object ThermalModule {
 
     @Provides
     @Singleton
-    fun provideThermalRepository(dataSource: ThermalHardwareDataSource): ThermalRepository = ThermalRepositoryImpl(dataSource)
+    fun provideThermalRepository(dataSource: ThermalHardwareDataSource): ThermalRepository =
+        ThermalRepositoryImpl(dataSource)
 
     @Provides
     @Singleton

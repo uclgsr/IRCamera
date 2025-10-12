@@ -83,8 +83,8 @@ class MyItemDecoration(
                         (
                             itemBottom
                                 ?: 0f
-                        ) * 2
-                    )
+                            ) * 2
+                        )
                 } else {
                     (itemBottom ?: 0f)
                 },
@@ -107,7 +107,7 @@ class MyItemDecoration(
                     (
                         itemRight
                             ?: 0f
-                    )
+                        )
                 },
             )
         val top: Int = dp2px(wholeTop ?: ((itemTop ?: 0f) * 2))
@@ -135,8 +135,8 @@ class MyItemDecoration(
                         (
                             itemRight
                                 ?: 0f
-                        ) * 2
-                    )
+                            ) * 2
+                        )
                 } else {
                     (itemRight ?: 0f)
                 },
@@ -150,8 +150,8 @@ class MyItemDecoration(
                         (
                             itemBottom
                                 ?: 0f
-                        ) * 2
-                    )
+                            ) * 2
+                        )
                 } else {
                     (itemBottom ?: 0f)
                 },
@@ -177,8 +177,8 @@ class MyItemDecoration(
                         (
                             itemRight
                                 ?: 0f
-                        ) * 2
-                    )
+                            ) * 2
+                        )
                 } else {
                     (itemRight ?: 0f)
                 },
@@ -192,8 +192,8 @@ class MyItemDecoration(
                         (
                             itemBottom
                                 ?: 0f
-                        ) * 2
-                    )
+                            ) * 2
+                        )
                 } else {
                     (itemBottom ?: 0f)
                 },
@@ -221,7 +221,7 @@ class MyItemDecoration(
                     (
                         itemRight
                             ?: 0f
-                    )
+                        )
                 },
             )
         val top: Int = dp2px(if (row == 0) wholeTop ?: ((itemTop ?: 0f) * 2) else (itemTop ?: 0f))

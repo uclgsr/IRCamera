@@ -27,24 +27,24 @@
     }
 
 override suspend fun startRecording(): Result<Unit> {
-    if (!isConnected.get()) {
-        return Result.failure(IllegalStateException("Simulation not connected"))
-    }
-    if (isRecording.get()) {
-        return Result.success(Unit)
-    }
-    val directory = File(context.filesDir, "thermal_simulation")
-    if (!directory.exists()) {
-        directory.mkdirs()
-    }
-    val fileName = "thermal_sim_${timeManager.getCurrentTimestampMs()}.csv"
-    val file = File(directory, fileName)
-    recordingWriter = FileWriter(file).apply {
-        write("$CSV_HEADER\n")
-        flush()
-    }
-    recordingFile = file
-    isRecording.set(true)
-    return Result.success(Unit)
+if (!isConnected.get()) {
+return Result.failure(IllegalStateException("Simulation not connected"))
 }
-        ```
+if (isRecording.get()) {
+return Result.success(Unit)
+}
+val directory = File(context.filesDir, "thermal_simulation")
+if (!directory.exists()) {
+directory.mkdirs()
+}
+val fileName = "thermal_sim_${timeManager.getCurrentTimestampMs()}.csv"
+val file = File(directory, fileName)
+recordingWriter = FileWriter(file).apply {
+write("$CSV_HEADER\n")
+flush()
+}
+recordingFile = file
+isRecording.set(true)
+return Result.success(Unit)
+}
+```

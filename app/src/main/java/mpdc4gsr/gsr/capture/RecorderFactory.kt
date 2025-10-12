@@ -32,10 +32,13 @@ class RecorderFactory(
         when (kind) {
             RecorderKind.GSR ->
                 GsrRecorder(appContext, ioDispatcher, shimmerController, simulationSource, timelineClock)
+
             RecorderKind.RGB_VIDEO ->
                 VideoRecorder(appContext, lifecycleOwnerProvider(), ioDispatcher, timelineClock)
+
             RecorderKind.THERMAL_VIDEO ->
                 CoordinatorThermalRecorder(thermalCoordinator)
+
             RecorderKind.AUDIO ->
                 AudioRecorder(appContext, ioDispatcher, timelineClock)
         }

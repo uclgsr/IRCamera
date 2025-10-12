@@ -153,7 +153,8 @@ except ImportError:
 
 - `app/src/main/java/mpdc4gsr/core/data/TimeSyncManager.kt`
 
-> The 2024 refresh replaced this callback path with `gsr/network/TimeSyncClient.kt` and `TimelineClock`. The historical fix remains documented here for traceability.
+> The 2024 refresh replaced this callback path with `gsr/network/TimeSyncClient.kt` and `TimelineClock`. The historical
+> fix remains documented here for traceability.
 
 ## Testing
 

@@ -127,7 +127,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Induce failure in one sensor module while others run. Verify " +
-                                    "failure is contained and other sensors continue recording normally.",
+                                "failure is contained and other sensors continue recording normally.",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

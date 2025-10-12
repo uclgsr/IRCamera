@@ -75,7 +75,7 @@ abstract class TemperatureBaseView : View {
     var textColor: Int
         @ColorInt get() = helper.textColor
         set(
-        @ColorInt value
+            @ColorInt value
         ) {
             helper.textColor = value
             invalidate()
@@ -546,12 +546,12 @@ abstract class TemperatureBaseView : View {
                                 .toDouble()
                                 .pow(2.0),
                     )
-            ).toInt()
+                ).toInt()
         return abs(tempDistance) < TOUCH_TOLERANCE &&
             x > min(
-                line.start.x,
-                line.end.x,
-            ) - TOUCH_TOLERANCE &&
+            line.start.x,
+            line.end.x,
+        ) - TOUCH_TOLERANCE &&
             x < max(line.start.x, line.end.x) + TOUCH_TOLERANCE
     }
 

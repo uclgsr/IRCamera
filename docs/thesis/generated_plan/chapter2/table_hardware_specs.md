@@ -5,10 +5,27 @@
             This table provides a quick reference to the capabilities and constraints of the chosen hardware.
 
             | Component | Model | Sensor Type | Resolution / Range | Sampling Rate | Interface | Key Specifications | Rationale for Selection |
+
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| **GSR Sensor** | Shimmer3 GSR+ | Electrodermal Activity (EDA) | 10kΩ - 4.7MΩ<br/>16-bit ADC | 128 Hz (configurable 51.2-512 Hz) | Bluetooth LE 4.0 | - Measurement range: 0.01-100 μS<br/>- Resolution: 76 μΩ<br/>- Excitation voltage: 0.5V<br/>- Weight: 22g<br/>- Battery: 450mAh (14 hours) | - Research-grade accuracy<br/>- Multi-channel (GSR, PPG, IMU)<br/>- Open SDK (Shimmer API)<br/>- Validated in peer-reviewed studies<br/>- Wireless for participant mobility |
-| **Thermal Camera** | Topdon TC001 | Thermal Infrared Imaging | 256×192 pixels<br/>-20°C to +550°C | 25 fps | USB-C (OTG) | - Spectral range: 8-14 μm<br/>- Thermal sensitivity: <50 mK<br/>- Temperature accuracy: ±2°C or ±2%<br/>- Field of view: 56° × 42°<br/>- Radiometric output: Yes | - Smartphone integration via USB<br/>- Higher resolution than FLIR One (160×120)<br/>- Radiometric temperature data access<br/>- Affordable (~$300)<br/>- InfiSense SDK support |
-| **RGB Camera** | Phone Built-in Camera | High-Resolution Video | 1920×1080 (1080p) up to 4K | 30 fps (configurable) | Internal (CameraX API) | - Wide-angle lens (~78° FOV)<br/>- H.264/AVC encoding<br/>- Autofocus: PDAF/Laser AF<br/>- Exposure: Auto-HDR<br/>- Storage: Local MP4 | - Already integrated in smartphone<br/>- CameraX provides stable API<br/>- Efficient compression<br/>- Synchronized with thermal camera<br/>- No additional hardware cost |
-| **Android Device** | Samsung Galaxy S22 / Google Pixel 7 | Computing Platform | N/A | N/A | Wi-Fi 6, USB-C, BLE 5.0 | - Snapdragon 8 Gen 1 / Tensor G2<br/>- RAM: 8GB<br/>- Storage: 128-256GB<br/>- Display: 6.1-6.3" AMOLED<br/>- OS: Android 12+ | - Powerful CPU/GPU for real-time processing<br/>- USB OTG for thermal camera<br/>- Large storage for recordings<br/>- Supports NTP time sync |
-| **PC Controller** | Desktop/Laptop | Control Station | N/A | N/A | Wi-Fi, Ethernet | - OS: Windows/macOS/Linux<br/>- Python 3.8+ runtime<br/>- TCP/IP server<br/>- ≥100GB storage | - Session orchestration<br/>- Data aggregation and sync<br/>- Real-time monitoring dashboard<br/>- Acts as NTP time source |
-| **Network** | Wi-Fi Router | Communication Infrastructure | N/A | N/A | IEEE 802.11ac/ax | - Dual-band 2.4/5 GHz<br/>- Latency: <5 ms local<br/>- Bandwidth: ≥100 Mbps | - Low-latency command delivery<br/>- Reliable heartbeats<br/>- Local network operation (no internet) |
+| **GSR Sensor** | Shimmer3 GSR+ | Electrodermal Activity (EDA) | 10kΩ - 4.7MΩ<br/>16-bit ADC | 128 Hz (configurable
+51.2-512 Hz) | Bluetooth LE 4.0 | - Measurement range: 0.01-100 μS<br/>- Resolution: 76 μΩ<br/>- Excitation voltage:
+0.5V<br/>- Weight: 22g<br/>- Battery: 450mAh (14 hours) | - Research-grade accuracy<br/>- Multi-channel (GSR, PPG,
+IMU)<br/>- Open SDK (Shimmer API)<br/>- Validated in peer-reviewed studies<br/>- Wireless for participant mobility |
+| **Thermal Camera** | Topdon TC001 | Thermal Infrared Imaging | 256×192 pixels<br/>-20°C to +550°C | 25 fps | USB-C (
+OTG) | - Spectral range: 8-14 μm<br/>- Thermal sensitivity: <50 mK<br/>- Temperature accuracy: ±2°C or ±2%<br/>- Field
+of view: 56° × 42°<br/>- Radiometric output: Yes | - Smartphone integration via USB<br/>- Higher resolution than FLIR
+One (160×120)<br/>- Radiometric temperature data access<br/>- Affordable (~$300)<br/>- InfiSense SDK support |
+| **RGB Camera** | Phone Built-in Camera | High-Resolution Video | 1920×1080 (1080p) up to 4K | 30 fps (configurable) |
+Internal (CameraX API) | - Wide-angle lens (~78° FOV)<br/>- H.264/AVC encoding<br/>- Autofocus: PDAF/Laser AF<br/>-
+Exposure: Auto-HDR<br/>- Storage: Local MP4 | - Already integrated in smartphone<br/>- CameraX provides stable API<br/>-
+Efficient compression<br/>- Synchronized with thermal camera<br/>- No additional hardware cost |
+| **Android Device** | Samsung Galaxy S22 / Google Pixel 7 | Computing Platform | N/A | N/A | Wi-Fi 6, USB-C, BLE
+5.0 | - Snapdragon 8 Gen 1 / Tensor G2<br/>- RAM: 8GB<br/>- Storage: 128-256GB<br/>- Display: 6.1-6.3" AMOLED<br/>- OS:
+Android 12+ | - Powerful CPU/GPU for real-time processing<br/>- USB OTG for thermal camera<br/>- Large storage for
+recordings<br/>- Supports NTP time sync |
+| **PC Controller** | Desktop/Laptop | Control Station | N/A | N/A | Wi-Fi, Ethernet | - OS: Windows/macOS/Linux<br/>-
+Python 3.8+ runtime<br/>- TCP/IP server<br/>- ≥100GB storage | - Session orchestration<br/>- Data aggregation and
+sync<br/>- Real-time monitoring dashboard<br/>- Acts as NTP time source |
+| **Network** | Wi-Fi Router | Communication Infrastructure | N/A | N/A | IEEE 802.11ac/ax | - Dual-band 2.4/5 GHz<br/>-
+Latency: <5 ms local<br/>- Bandwidth: ≥100 Mbps | - Low-latency command delivery<br/>- Reliable heartbeats<br/>- Local
+network operation (no internet) |

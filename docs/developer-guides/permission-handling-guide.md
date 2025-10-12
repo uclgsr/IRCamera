@@ -2,7 +2,8 @@
 
 ## Overview
 
-`PermissionTools` centralises runtime permission requests by exposing a lifecycle-aware controller that wraps the Android
+`PermissionTools` centralises runtime permission requests by exposing a lifecycle-aware controller that wraps the
+Android
 `ActivityResultContracts.RequestMultiplePermissions` API. Permissions are modelled as feature areas
 (`FeaturePermissionArea`) so that the same bundle of runtime grants is reused consistently across GSR, RGB, and thermal
 workflows.
@@ -42,13 +43,13 @@ val hasMedia = PermissionTools.hasPermissions(
 
 Each area maps to the concrete runtime permissions needed on the current API level:
 
-| Feature | Purpose | Typical Usage |
-| --- | --- | --- |
-| `GSR_SENSORS` | Bluetooth LE scan/connect (plus legacy location fallback) | Shimmer discovery and telemetry |
-| `RGB_VIDEO` | Camera + microphone + scoped media | RGB capture alongside GSR |
-| `THERMAL_IR` | Camera, microphone, media, nearby Wi-Fi | Thermal/IR capture and control |
-| `MEDIA_REVIEW` | Read captured media (scoped storage) | Gallery/report review flows |
-| `NOTIFICATIONS` | Post notifications (Android 13+) | Remote commands / alerts |
+| Feature         | Purpose                                                   | Typical Usage                   |
+|-----------------|-----------------------------------------------------------|---------------------------------|
+| `GSR_SENSORS`   | Bluetooth LE scan/connect (plus legacy location fallback) | Shimmer discovery and telemetry |
+| `RGB_VIDEO`     | Camera + microphone + scoped media                        | RGB capture alongside GSR       |
+| `THERMAL_IR`    | Camera, microphone, media, nearby Wi-Fi                   | Thermal/IR capture and control  |
+| `MEDIA_REVIEW`  | Read captured media (scoped storage)                      | Gallery/report review flows     |
+| `NOTIFICATIONS` | Post notifications (Android 13+)                          | Remote commands / alerts        |
 
 Compose onboarding already aggregates these groups so modal prompts align with the same feature definitions.
 

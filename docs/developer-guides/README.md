@@ -6,7 +6,8 @@ Targeted deep dives into reusable tooling that supports feature development.
   for screens such as the camera dashboard.
 - [logging-utilities-guide.md](logging-utilities-guide.md) – Using `StructuredLogger`, telemetry helpers, and crash
   handling utilities.
-- [permission-handling-guide.md](permission-handling-guide.md) – Working with `PermissionTools` from `component/shared` to
+- [permission-handling-guide.md](permission-handling-guide.md) – Working with `PermissionTools` from `component/shared`
+  to
   request runtime permissions, manage USB access, and handle battery optimisations.
 
 These guides complement the broader references in:

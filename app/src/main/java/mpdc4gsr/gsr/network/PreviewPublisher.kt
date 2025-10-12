@@ -27,7 +27,8 @@ class PreviewPublisher(
 ) : AutoCloseable {
 
     private val scope = CoroutineScope(dispatcher + SupervisorJob())
-    @Volatile private var started = false
+    @Volatile
+    private var started = false
 
     fun start() {
         if (started) return

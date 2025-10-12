@@ -131,7 +131,7 @@ fun SettingsSection(
 
 data class SettingItemData(
     val text: String,
-    @DrawableRes val iconRes: Int? = null,
+    @param:DrawableRes val iconRes: Int? = null,
     val icon: ImageVector? = null,
     val showIcon: Boolean = true,
     val showMoreArrow: Boolean = true,

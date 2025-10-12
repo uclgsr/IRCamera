@@ -112,8 +112,8 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Start recording with USB thermal camera, then physically unplug " +
-                                    "the camera during the session. Verify graceful error handling and " +
-                                    "system continues operation.",
+                                "the camera during the session. Verify graceful error handling and " +
+                                "system continues operation.",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -132,12 +132,12 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "1. Connect USB thermal camera\n" +
-                                    "2. Start recording session\n" +
-                                    "3. After 15-30 seconds, physically unplug the USB camera\n" +
-                                    "4. Observe system behavior\n" +
-                                    "5. Verify app does not crash\n" +
-                                    "6. Verify other sensors continue recording\n" +
-                                    "7. Stop recording to complete test",
+                                "2. Start recording session\n" +
+                                "3. After 15-30 seconds, physically unplug the USB camera\n" +
+                                "4. Observe system behavior\n" +
+                                "5. Verify app does not crash\n" +
+                                "6. Verify other sensors continue recording\n" +
+                                "7. Stop recording to complete test",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

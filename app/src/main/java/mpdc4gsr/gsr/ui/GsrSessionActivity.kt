@@ -11,8 +11,10 @@ import mpdc4gsr.gsr.model.SessionStateStore
 @AndroidEntryPoint
 class GsrSessionActivity : ComponentActivity() {
 
-    @Inject lateinit var orchestrator: GsrOrchestrator
-    @Inject lateinit var sessionStateStore: SessionStateStore
+    @Inject
+    lateinit var orchestrator: GsrOrchestrator
+    @Inject
+    lateinit var sessionStateStore: SessionStateStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

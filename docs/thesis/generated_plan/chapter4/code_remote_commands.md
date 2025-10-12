@@ -35,29 +35,30 @@
             sendAck(commandId, "error", error.message ?: "error")
         }
     }
+
 }
 
 private suspend fun handleStartRecording(payload: JsonObject) {
-    val sessionId =
-        payload["session_id"]?.jsonPrimitive?.content
-            ?: payload["sessionId"]?.jsonPrimitive?.content
-            ?: "unknown"
-    val modalities =
-        payload["modalities"]?.jsonArray?.mapNotNull {
-            it.jsonPrimitive.contentOrNull?.let { name ->
-                runCatching { RecorderKind.valueOf(name.uppercase()) }.getOrNull()
-            }
-        }?.toSet()
-            ?: RecorderKind.values().toSet()
-    val scheduled = payload["scheduledTimeMillis"]?.jsonPrimitive?.longOrNull ?: 0L
-    val parameters = payload.toKotlinMap()
-    val command =
-        SessionCommand.StartRecording(
-            sessionId = sessionId,
-            modalities = modalities,
-            scheduledTimeMillis = scheduled,
-            parameters = parameters,
-        )
-    _events.emit(command)
+val sessionId =
+payload["session_id"]?.jsonPrimitive?.content
+?: payload["sessionId"]?.jsonPrimitive?.content
+?: "unknown"
+val modalities =
+payload["modalities"]?.jsonArray?.mapNotNull {
+it.jsonPrimitive.contentOrNull?.let { name ->
+runCatching { RecorderKind.valueOf(name.uppercase()) }.getOrNull()
 }
-        ```
+}?.toSet()
+?: RecorderKind.values().toSet()
+val scheduled = payload["scheduledTimeMillis"]?.jsonPrimitive?.longOrNull ?: 0L
+val parameters = payload.toKotlinMap()
+val command =
+SessionCommand.StartRecording(
+sessionId = sessionId,
+modalities = modalities,
+scheduledTimeMillis = scheduled,
+parameters = parameters,
+)
+_events.emit(command)
+}
+```

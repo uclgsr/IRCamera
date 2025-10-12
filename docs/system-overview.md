@@ -9,10 +9,12 @@ document summarises how the major components interact and where to find their im
 
 - **Application bootstrap (`app/src/main/java/mpdc4gsr/app/App.kt`)** sets up StrictMode, telemetry, native libraries,
   and starts the `RecordingService`.
-- **Recording service (`app/src/main/java/mpdc4gsr/app/runtime/RecordingService.kt`)** runs as a foreground service, manages session lifecycle,
+- **Recording service (`app/src/main/java/mpdc4gsr/app/runtime/RecordingService.kt`)** runs as a foreground service,
+  manages session lifecycle,
   coordinates sensors, exposes a TCP server for the PC controller, and handles crash recovery via
   `CrashRecoveryManager`.
-- **Structured logging and crash safety** are implemented in `core/common/logging/StructuredLogger.kt`, `core/common/crash/CrashSafeSupervisor.kt`, and
+- **Structured logging and crash safety** are implemented in `core/common/logging/StructuredLogger.kt`,
+  `core/common/crash/CrashSafeSupervisor.kt`, and
   `core/common/crash/CrashRecoveryManager.kt`.
 - **Session management** is provided by `core/recording/session/SessionManager.kt`, `SessionModels.kt`, and
   `core/data/utils/SessionDirectoryManager.kt`.
@@ -25,14 +27,17 @@ document summarises how the major components interact and where to find their im
   statistics, and exports.
 - **Thermal**: `component/thermal` and `feature/capture/thermal` wrap the vendor SDK and align thermal frames with
   session metadata.
-- **Multi-modal coordination** lives in `feature/capture/gsr/presentation/MultiModalRecordingViewModel` which orchestrates
+- **Multi-modal coordination** lives in `feature/capture/gsr/presentation/MultiModalRecordingViewModel` which
+  orchestrates
   simultaneous captures and sync markers.
 
 ### Networking
 
-- **PcControllerServer (`core/infrastructure/network/PcControllerServer.kt`)** hosts the socket server on port 8081, registers with
+- **PcControllerServer (`core/infrastructure/network/PcControllerServer.kt`)** hosts the socket server on port 8081,
+  registers with
   mDNS, handles client command parsing, and delegates actions back to the service.
-- **Feature network module (`feature/connectivity/data`)** provides `NetworkController`, `RecordingController`, streaming
+- **Feature network module (`feature/connectivity/data`)** provides `NetworkController`, `RecordingController`,
+  streaming
   pipelines, TCP/WebSocket clients, file upload services, and error recovery utilities.
 - **Time synchronisation** uses the `gsr/network/TimeSyncClient.kt` (Android) and
   `pc-controller/time_sync_service.py` (PC) pair to maintain <15 ms drift via UDP probes and HTTP calibration sharing.
@@ -40,7 +45,8 @@ document summarises how the major components interact and where to find their im
 ### User Experience
 
 - Compose navigation is centred in `core/designsystem/navigation/` with `IRCameraNavigation` and `UnifiedNavigation`.
-- Dashboards such as `feature/capture/camera/ui/CameraDashboardScreen.kt` and `feature/capture/gsr/ui/GSRSensorScreen.kt` surface live
+- Dashboards such as `feature/capture/camera/ui/CameraDashboardScreen.kt` and
+  `feature/capture/gsr/ui/GSRSensorScreen.kt` surface live
   state from their view models.
 - Shared styling and widgets live under `core/designsystem/`.
 
@@ -66,7 +72,8 @@ document summarises how the major components interact and where to find their im
 - `app/src/main/java/mpdc4gsr/app/` – Application bootstrap, runtime services, and global Hilt modules.
 - `app/src/main/java/mpdc4gsr/core/` – Shared foundation (`common/`, `designsystem/`, `hardware/`, `infrastructure/`,
   `recording/`) providing utilities, UI building blocks, and sensor abstractions.
-- `app/src/main/java/mpdc4gsr/feature/capture/camera/` – Camera repositories, configuration managers, view models, and Compose
+- `app/src/main/java/mpdc4gsr/feature/capture/camera/` – Camera repositories, configuration managers, view models, and
+  Compose
   screens.
 - `app/src/main/java/mpdc4gsr/feature/capture/gsr/` – GSR domain, repositories, export flow, and Compose UI.
 - `app/src/main/java/mpdc4gsr/feature/capture/thermal/` – Thermal camera integration and UI.
@@ -92,7 +99,8 @@ document summarises how the major components interact and where to find their im
 - Structured logs are persisted by `StructuredLogger`; metrics are exposed through `TelemetryManager` and
   `PerformanceMetrics`.
 - `CrashSafeSupervisor` performs background health checks, and `CrashRecoveryManager` restores sessions after faults.
-- Network health, reconnection, and backoff strategies live in `feature/connectivity/data/NetworkErrorRecoveryManager.kt`.
+- Network health, reconnection, and backoff strategies live in
+  `feature/connectivity/data/NetworkErrorRecoveryManager.kt`.
 
 Consult the platform-specific guides for deeper dives into implementation details.
 

@@ -70,14 +70,14 @@ class PCControllerIntegrationTestCase(unittest.TestCase):
             self.assertEqual(payload.get("session_id"), "integration_suite")
             sock.sendall(
                 (
-                    json.dumps(
-                        {
-                            "type": "command_ack",
-                            "commandId": start_command.get("commandId"),
-                            "status": "ok",
-                        }
-                    )
-                    + "\n"
+                        json.dumps(
+                            {
+                                "type": "command_ack",
+                                "commandId": start_command.get("commandId"),
+                                "status": "ok",
+                            }
+                        )
+                        + "\n"
                 ).encode("utf-8")
             )
 
@@ -92,39 +92,39 @@ class PCControllerIntegrationTestCase(unittest.TestCase):
             payload = base64.b64encode(b"integration-data").decode("ascii")
             sock.sendall(
                 (
-                    json.dumps(
-                        {
-                            "type": "file_begin",
-                            "session_id": session_id,
-                            "filename": "data.bin",
-                        }
-                    )
-                    + "\n"
+                        json.dumps(
+                            {
+                                "type": "file_begin",
+                                "session_id": session_id,
+                                "filename": "data.bin",
+                            }
+                        )
+                        + "\n"
                 ).encode("utf-8")
             )
             sock.sendall(
                 (
-                    json.dumps(
-                        {
-                            "type": "file_chunk",
-                            "session_id": session_id,
-                            "filename": "data.bin",
-                            "data": payload,
-                        }
-                    )
-                    + "\n"
+                        json.dumps(
+                            {
+                                "type": "file_chunk",
+                                "session_id": session_id,
+                                "filename": "data.bin",
+                                "data": payload,
+                            }
+                        )
+                        + "\n"
                 ).encode("utf-8")
             )
             sock.sendall(
                 (
-                    json.dumps(
-                        {
-                            "type": "file_end",
-                            "session_id": session_id,
-                            "filename": "data.bin",
-                        }
-                    )
-                    + "\n"
+                        json.dumps(
+                            {
+                                "type": "file_end",
+                                "session_id": session_id,
+                                "filename": "data.bin",
+                            }
+                        )
+                        + "\n"
                 ).encode("utf-8")
             )
 
@@ -136,14 +136,14 @@ class PCControllerIntegrationTestCase(unittest.TestCase):
             self.assertEqual(stop_command.get("payload", {}).get("session_id"), session_id)
             sock.sendall(
                 (
-                    json.dumps(
-                        {
-                            "type": "command_ack",
-                            "commandId": stop_command.get("commandId"),
-                            "status": "ok",
-                        }
-                    )
-                    + "\n"
+                        json.dumps(
+                            {
+                                "type": "command_ack",
+                                "commandId": stop_command.get("commandId"),
+                                "status": "ok",
+                            }
+                        )
+                        + "\n"
                 ).encode("utf-8")
             )
         finally:

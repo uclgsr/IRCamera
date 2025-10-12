@@ -5,10 +5,12 @@ feature development.
 
 ## Application Lifecycle
 
-- `App` (`app/src/main/java/mpdc4gsr/app/App.kt`) is annotated with `@HiltAndroidApp`, configures StrictMode in debug builds, loads native
+- `App` (`app/src/main/java/mpdc4gsr/app/App.kt`) is annotated with `@HiltAndroidApp`, configures StrictMode in debug
+  builds, loads native
   libraries, registers telemetry, and always starts the `RecordingService`.
 - Global exception handling suppresses known transient issues while forwarding fatal crashes.
-- `RecordingService` (`app/src/main/java/mpdc4gsr/app/runtime/RecordingService.kt`) runs in the foreground, publishes notifications, owns the command
+- `RecordingService` (`app/src/main/java/mpdc4gsr/app/runtime/RecordingService.kt`) runs in the foreground, publishes
+  notifications, owns the command
   socket, and coordinates session start/stop, sync markers, and crash recovery flows.
 
 ## Recording and Session Management
@@ -27,7 +29,8 @@ feature development.
 - `core/data/RgbCameraRecorder` encapsulates CameraX preview, video recording, adaptive frame capture, and metadata
   export.
 - The recorder exposes `SensorRecorder` flows to the UI. `feature/capture/camera/presentation/RGBCameraViewModel` and
-  `feature/capture/camera/ui/CameraDashboardScreen` provide compose-driven controls for mode switching, frame rates, focus, and
+  `feature/capture/camera/ui/CameraDashboardScreen` provide compose-driven controls for mode switching, frame rates,
+  focus, and
   diagnostics.
 - Supporting utilities include `CameraConfigurationManager`, `CameraControlsManager`, `CameraPerformanceManager`, and
   Samsung-specific compatibility helpers.
@@ -42,7 +45,8 @@ feature development.
 
 ### Thermal
 
-- Thermal capture flows through the `component/thermal` module and the feature module `feature/capture/thermal`. View models
+- Thermal capture flows through the `component/thermal` module and the feature module `feature/capture/thermal`. View
+  models
   coordinate device warm-up, calibration, and frame delivery into the session directory.
 
 ## Network Communication
@@ -59,7 +63,8 @@ feature development.
 
 - `feature/dashboard/ui/MainComposeActivity` hosts a Compose `NavHost` and acts as the canonical launcher path.
 - Feature screens live under `feature/*/ui`, each paired with a Hilt-backed view model in `feature/*/presentation`.
-- Reusable components and theming live in `core/designsystem/`, and the shared `LibSharedTheme` is provided in `component/shared`.
+- Reusable components and theming live in `core/designsystem/`, and the shared `LibSharedTheme` is provided in
+  `component/shared`.
 
 ## Dependency Injection and Threading
 

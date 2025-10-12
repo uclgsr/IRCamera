@@ -27,8 +27,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro",
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
             )
         }
     }
@@ -40,24 +40,35 @@ android {
     }
 
     compileOptions {
-        // Toolchain config handles language level; retain desugaring flag here.
         isCoreLibraryDesugaringEnabled = true
     }
 
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            jvmTarget.set(
+                org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(
+                    libs.versions.jvmTarget.get()
+                )
+            )
             freeCompilerArgs.addAll(
-                    listOf(
-                            "-opt-in=kotlin.RequiresOptIn",
-                            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                            "-opt-in=kotlinx.coroutines.FlowPreview",
-                    ),
+                listOf(
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlinx.coroutines.FlowPreview",
+                ),
             )
         }
     }
 
-    java { toolchain { languageVersion.set(JavaLanguageVersion.of(17)) } }
+    java {
+        toolchain {
+            languageVersion.set(
+                JavaLanguageVersion.of(
+                    libs.versions.javaVersion.get().toInt()
+                )
+            )
+        }
+    }
 
     ndkVersion = libs.versions.ndkVersion.get()
     buildFeatures {
@@ -71,37 +82,37 @@ android {
         jniLibs {
             pickFirsts += listOf("**/libc++_shared.so")
             excludes +=
-                    listOf(
-                            "**/libavcodec.so",
-                            "**/a.so",
-                            "**/libavfilter.so",
-                            "**/libavformat.so",
-                            "**/libavutil.so",
-                            "**/libjniavcodec.so",
-                            "**/libjniavdevice.so",
-                            "**/libjniavfilter.so",
-                            "**/libjniavformat.so",
-                            "**/libjniavutil.so",
-                            "**/libjniswresample.so",
-                            "**/libjniswscale.so",
-                            "**/libswresample.so",
-                            "**/libswscale.so",
-                            "**/libSRImage.so",
-                            "**/liblog.so",
-                            "**/libopen3d.so",
-                            "**/libopencv_java4.so",
-                    )
+                listOf(
+                    "**/libavcodec.so",
+                    "**/a.so",
+                    "**/libavfilter.so",
+                    "**/libavformat.so",
+                    "**/libavutil.so",
+                    "**/libjniavcodec.so",
+                    "**/libjniavdevice.so",
+                    "**/libjniavfilter.so",
+                    "**/libjniavformat.so",
+                    "**/libjniavutil.so",
+                    "**/libjniswresample.so",
+                    "**/libjniswscale.so",
+                    "**/libswresample.so",
+                    "**/libswscale.so",
+                    "**/libSRImage.so",
+                    "**/liblog.so",
+                    "**/libopen3d.so",
+                    "**/libopencv_java4.so",
+                )
             keepDebugSymbols += listOf("**/*.so")
         }
         resources {
             excludes +=
-                    listOf(
-                            "META-INF/DEPENDENCIES",
-                            "META-INF/LICENSE",
-                            "META-INF/LICENSE.txt",
-                            "META-INF/NOTICE",
-                            "META-INF/NOTICE.txt",
-                    )
+                listOf(
+                    "META-INF/DEPENDENCIES",
+                    "META-INF/LICENSE",
+                    "META-INF/LICENSE.txt",
+                    "META-INF/NOTICE",
+                    "META-INF/NOTICE.txt",
+                )
         }
     }
 

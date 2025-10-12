@@ -5,6 +5,11 @@ targetSdk = "35"
 versionCode = "1100"
 versionName = "1.10.000"
 ndkVersion = "21.3.6528147"
+buildToolsVersion = "35.0.0"
+javaVersion = "17"
+javaVersionApp = "21"
+jvmTarget = "17"
+jvmTargetApp = "21"
 
 kotlin = "2.2.20"
 hilt = "2.57.1"
@@ -213,7 +218,7 @@ ir-layout = { group = "com.github.CoderCaiSL", name = "jitpackMvn", version = "+
 
 ffmpeg-android-arm64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-arm = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
-ffmpeg-android-x86-64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
+ffmpeg-android-x8664 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 
 umeng-common = { group = "com.umeng.umsdk", name = "common", version.ref = "umengCommon" }
@@ -291,7 +296,7 @@ media3 = ["media3-exoplayer", "media3-exoplayer-dash", "media3-ui"]
 umeng = ["umeng-common", "umeng-asms", "umeng-analytics"]
 andromeda = ["andromeda-core", "andromeda-sense", "andromeda-views"]
 javacv-core = ["javacv", "javacpp"]
-ffmpeg-android = ["ffmpeg-android-arm64", "ffmpeg-android-arm", "ffmpeg-android-x86-64", "ffmpeg-android-x86"]
+ffmpeg-android = ["ffmpeg-android-arm64", "ffmpeg-android-arm", "ffmpeg-android-x8664", "ffmpeg-android-x86"]
 
 test-unit = ["junit", "junit-jupiter", "hamcrest", "mockk", "kotlinx-coroutines-test", "robolectric", "mockwebserver", "truth", "javafaker"]
 test-android = ["test-ext-junit", "test-espresso-core", "test-runner", "test-rules", "test-ext-junit-ktx", "test-espresso-contrib", "test-espresso-intents", "test-uiautomator", "benchmark-junit4", "truth"]

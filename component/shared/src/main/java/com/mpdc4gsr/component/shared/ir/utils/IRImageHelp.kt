@@ -67,8 +67,8 @@ class IRImageHelp {
                                 temperatureSrc
                                     .get(j + 1)
                                     .toInt() and 0xff
-                            ) * 256
-                        ).toFloat()
+                                ) * 256
+                            ).toFloat()
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
                     if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
                         val intensity =
@@ -125,8 +125,8 @@ class IRImageHelp {
                         (temperatureSrc[j].toInt() and 0xff) + (
                             temperatureSrc[j + 1]
                                 .toInt() and 0xff
-                        ) * 256
-                    ).toFloat()
+                            ) * 256
+                        ).toFloat()
                 temperature0 = (temperature0 / 64 - 273.15).toFloat()
                 val y0: Int = imageDst!![j].toInt() and 0xff
                 if (temperature0 < biaochiMin || temperature0 > biaochiMax) {
@@ -157,7 +157,7 @@ class IRImageHelp {
                 (
                     (alarmBean.highTemp != Float.MAX_VALUE && alarmBean.isHighOpen) ||
                         (alarmBean.isLowOpen && alarmBean.lowTemp != Float.MIN_VALUE)
-                )
+                    )
             ) {
                 try {
                     val resultBitmap =

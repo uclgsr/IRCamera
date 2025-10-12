@@ -77,7 +77,8 @@ class FailoverThermalDataSource(
 
     override suspend fun setEmissivity(value: Float): Result<Unit> = delegate.get().setEmissivity(value)
 
-    override suspend fun setMeasurementDistance(meters: Float): Result<Unit> = delegate.get().setMeasurementDistance(meters)
+    override suspend fun setMeasurementDistance(meters: Float): Result<Unit> =
+        delegate.get().setMeasurementDistance(meters)
 
     override suspend fun setReflectedTemperature(tempCelsius: Float): Result<Unit> =
         delegate.get().setReflectedTemperature(tempCelsius)
@@ -121,7 +122,10 @@ class FailoverThermalDataSource(
 
     private fun checkSimulationOverride(): Boolean {
         val env = System.getenv("MPDC4GSR_FORCE_THERMAL_SIMULATION")?.toBooleanStrictOrNull() ?: false
-        val prop = runCatching { System.getProperty("mpdc4gsr.forceThermalSimulation")?.toBoolean() ?: false }.getOrDefault(false)
+        val prop =
+            runCatching { System.getProperty("mpdc4gsr.forceThermalSimulation")?.toBoolean() ?: false }.getOrDefault(
+                false
+            )
         return env || prop
     }
 
