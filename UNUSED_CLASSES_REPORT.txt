@@ -1,0 +1,1226 @@
+================================================================================
+                         UNUSED CLASSES ANALYSIS REPORT
+                              IRCamera Project
+================================================================================
+
+EXECUTIVE SUMMARY
+-----------------
+This report identifies Java and Kotlin classes in the IRCamera project that
+appear to have no external references (i.e., are not imported or used by any
+other files in the codebase).
+
+Analysis Date: 2024
+Repository: uclgsr/IRCamera
+Branch: dev
+
+METHODOLOGY
+-----------
+1. Scanned all Java (*.java) and Kotlin (*.kt) source files
+2. Extracted class definitions from each file
+3. Searched for references to each class across the entire codebase
+4. Excluded build directories, git files, and documentation
+5. Identified classes with zero external references
+
+STATISTICS
+----------
+Total source files analyzed:           1,253
+Classes with no external references:     395
+Classes with 1-2 references:             551
+Total potentially unused:                946 (75.5% of files)
+
+NOTE: Some classes may be used through reflection, dependency injection,
+Android manifest declarations, or as entry points (Activities, Services).
+Manual verification is recommended before removing any class.
+
+================================================================================
+                    COMPLETE LIST OF UNUSED CLASSES
+================================================================================
+
+Below is the complete list of 395 classes that appear to have no external
+references in the codebase:
+
+  1. ChartActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/temp/ChartActivity.kt
+
+  2. ImageThreadTCOld
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/thread/ImageThreadTCOld.java
+
+  3. TemperatureViewOld
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/TemperatureViewOld.java
+
+  4. com.mpdc4gsr.gsr.model.GSRModels
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/model/GSRModels.kt
+
+  5. com.mpdc4gsr.gsr.network.FileTransferProtocol
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/network/FileTransferProtocol.kt
+
+  6. com.mpdc4gsr.gsr.network.MultiDeviceCoordination
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/network/MultiDeviceCoordination.kt
+
+  7. com.mpdc4gsr.gsr.network.QualityOfServiceManager
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/network/QualityOfServiceManager.kt
+
+  8. com.mpdc4gsr.gsr.service.ErrorRecoveryManager
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/service/ErrorRecoveryManager.kt
+
+  9. com.mpdc4gsr.gsr.service.MultiModalRecordingService
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/service/MultiModalRecordingService.kt
+
+ 10. com.mpdc4gsr.gsr.service.ShimmerInterfaces
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/service/ShimmerInterfaces.kt
+
+ 11. com.mpdc4gsr.gsr.tests.GSRDataModelsTest
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/test/java/com/mpdc4gsr/gsr/tests/GSRDataModelsTest.kt
+
+ 12. com.mpdc4gsr.gsr.tests.GSRRecordingServiceTest
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/test/java/com/mpdc4gsr/gsr/tests/GSRRecordingServiceTest.kt
+
+ 13. com.mpdc4gsr.gsr.tests.RecordingSessionManagerTest
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/test/java/com/mpdc4gsr/gsr/tests/RecordingSessionManagerTest.kt
+
+ 14. com.mpdc4gsr.gsr.tests.RobolectricFrameworkTest
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/test/java/com/mpdc4gsr/gsr/tests/RobolectricFrameworkTest.kt
+
+ 15. com.mpdc4gsr.gsr.tests.ShimmerFactoryResolverTest
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/test/java/com/mpdc4gsr/gsr/tests/ShimmerFactoryResolverTest.kt
+
+ 16. com.mpdc4gsr.gsr.tests.ShimmerGSRRecorderTest
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/test/java/com/mpdc4gsr/gsr/tests/ShimmerGSRRecorderTest.kt
+
+ 17. com.mpdc4gsr.gsr.tests.TimeUtilitiesTest
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/test/java/com/mpdc4gsr/gsr/tests/TimeUtilitiesTest.kt
+
+ 18. com.mpdc4gsr.gsr.tests.ZeroconfServiceDiscoveryTest
+     File: /home/runner/work/IRCamera/IRCamera/component/gsr-recording/src/test/java/com/mpdc4gsr/gsr/tests/ZeroconfServiceDiscoveryTest.kt
+
+ 19. com.mpdc4gsr.libunified.app.activity.BaseConfigComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/activity/BaseConfigComposeActivity.kt
+
+ 20. com.mpdc4gsr.libunified.app.activity.PseudoSetComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/activity/PseudoSetComposeActivity.kt
+
+ 21. com.mpdc4gsr.libunified.app.bean.CameraIRConfig
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/CameraIRConfig.kt
+
+ 22. com.mpdc4gsr.libunified.app.bean.HouseRepPreviewBean
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/HouseRepPreviewBean.java
+
+ 23. com.mpdc4gsr.libunified.app.bean.base.NoBodyEntity
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/base/NoBodyEntity.kt
+
+ 24. com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/event/GalleryDelEvent.kt
+
+ 25. com.mpdc4gsr.libunified.app.bean.event.PDFEvent
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/event/PDFEvent.kt
+
+ 26. com.mpdc4gsr.libunified.app.bean.event.ReportCreateEvent
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/event/ReportCreateEvent.kt
+
+ 27. com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/event/TS004ResetEvent.kt
+
+ 28. com.mpdc4gsr.libunified.app.bean.event.VersionUpData
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/event/VersionUpData.kt
+
+ 29. com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/bean/tools/ThermalBean.kt
+
+ 30. com.mpdc4gsr.libunified.app.binding.ViewBindingAdapter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/binding/ViewBindingAdapter.kt
+
+ 31. com.mpdc4gsr.libunified.app.comm.AlarmHelp
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/comm/AlarmHelp.kt
+
+ 32. com.mpdc4gsr.libunified.app.comm.ExcelUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/comm/ExcelUtils.java
+
+ 33. com.mpdc4gsr.libunified.app.comm.IrParam
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/comm/IrParam.kt
+
+ 34. com.mpdc4gsr.libunified.app.comm.PDFHelp
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/comm/PDFHelp.kt
+
+ 35. com.mpdc4gsr.libunified.app.comm.bean.SaveSettingBean
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/comm/bean/SaveSettingBean.kt
+
+ 36. com.mpdc4gsr.libunified.app.comm.view.CommLoadMoreView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/comm/view/CommLoadMoreView.kt
+
+ 37. com.mpdc4gsr.libunified.app.compose.components.ComposeTextRenderer
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/components/ComposeTextRenderer.kt
+
+ 38. com.mpdc4gsr.libunified.app.compose.components.ComposeToast
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/components/ComposeToast.kt
+
+ 39. com.mpdc4gsr.libunified.app.compose.components.MenuCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/components/MenuCompose.kt
+
+ 40. com.mpdc4gsr.libunified.app.compose.components.MenuViewsCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/components/MenuViewsCompose.kt
+
+ 41. com.mpdc4gsr.libunified.app.compose.components.TargetColorPickerCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/components/TargetColorPickerCompose.kt
+
+ 42. com.mpdc4gsr.libunified.app.compose.dialogs.ComplexDialogsCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/ComplexDialogsCompose.kt
+
+ 43. com.mpdc4gsr.libunified.app.compose.dialogs.ComposeDialogHelper
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/ComposeDialogHelper.kt
+
+ 44. com.mpdc4gsr.libunified.app.compose.dialogs.ConfirmDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/ConfirmDialogCompose.kt
+
+ 45. com.mpdc4gsr.libunified.app.compose.dialogs.FirmwareUpdateDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/FirmwareUpdateDialogCompose.kt
+
+ 46. com.mpdc4gsr.libunified.app.compose.dialogs.LoadingDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/LoadingDialogCompose.kt
+
+ 47. com.mpdc4gsr.libunified.app.compose.dialogs.MessageDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/MessageDialogCompose.kt
+
+ 48. com.mpdc4gsr.libunified.app.compose.dialogs.PopupDialogsCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/PopupDialogsCompose.kt
+
+ 49. com.mpdc4gsr.libunified.app.compose.dialogs.ProgressDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/ProgressDialogCompose.kt
+
+ 50. com.mpdc4gsr.libunified.app.compose.dialogs.SpecializedTipDialogsCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/SpecializedTipDialogsCompose.kt
+
+ 51. com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogsCompose
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/dialogs/TipDialogsCompose.kt
+
+ 52. com.mpdc4gsr.libunified.app.compose.utils.SafeRippleModifier
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/compose/utils/SafeRippleModifier.kt
+
+ 53. com.mpdc4gsr.libunified.app.config.AppConfig
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/config/AppConfig.kt
+
+ 54. com.mpdc4gsr.libunified.app.config.router.DegradeServiceImpl
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/config/router/DegradeServiceImpl.kt
+
+ 55. com.mpdc4gsr.libunified.app.db.entity.DirBase
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/db/entity/DirBase.kt
+
+ 56. com.mpdc4gsr.libunified.app.db.entity.HouseBase
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/db/entity/HouseBase.kt
+
+ 57. com.mpdc4gsr.libunified.app.db.entity.ItemBase
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/db/entity/ItemBase.kt
+
+ 58. com.mpdc4gsr.libunified.app.example.EnhancedNetworkingExample
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/example/EnhancedNetworkingExample.kt
+
+ 59. com.mpdc4gsr.libunified.app.http.repository.LmsRepository
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/http/repository/LmsRepository.kt
+
+ 60. com.mpdc4gsr.libunified.app.http.tool.DownloadTools
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/http/tool/DownloadTools.kt
+
+ 61. com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/ktbase/BaseViewModelActivity.kt
+
+ 62. com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/ktbase/BaseViewModelFragment.kt
+
+ 63. com.mpdc4gsr.libunified.app.ktbase.BaseWifiActivity
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/ktbase/BaseWifiActivity.kt
+
+ 64. com.mpdc4gsr.libunified.app.ktbase.ViewModelFactory
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/ktbase/ViewModelFactory.kt
+
+ 65. com.mpdc4gsr.libunified.app.lms.activity.LmsUpdateDialog
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/lms/activity/LmsUpdateDialog.java
+
+ 66. com.mpdc4gsr.libunified.app.lms.bean.FeedBackBean
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/lms/bean/FeedBackBean.java
+
+ 67. com.mpdc4gsr.libunified.app.lms.feedback.activity.FeedbackActivity
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/lms/feedback/activity/FeedbackActivity.java
+
+ 68. com.mpdc4gsr.libunified.app.lms.package-info
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/lms/package-info.java
+
+ 69. com.mpdc4gsr.libunified.app.lms.weiget.LmsLoadDialog
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/lms/weiget/LmsLoadDialog.java
+
+ 70. com.mpdc4gsr.libunified.app.lms.weiget.LmsLoadView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/lms/weiget/LmsLoadView.java
+
+ 71. com.mpdc4gsr.libunified.app.matrix.UsbStatusInterface
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/matrix/UsbStatusInterface.kt
+
+ 72. com.mpdc4gsr.libunified.app.menu.constant.MenuType
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/menu/constant/MenuType.kt
+
+ 73. com.mpdc4gsr.libunified.app.menu.constant.SettingType
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/menu/constant/SettingType.kt
+
+ 74. com.mpdc4gsr.libunified.app.menu.constant.TargetType
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/menu/constant/TargetType.kt
+
+ 75. com.mpdc4gsr.libunified.app.menu.constant.TempPointType
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/menu/constant/TempPointType.kt
+
+ 76. com.mpdc4gsr.libunified.app.menu.constant.TwoLightType
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/menu/constant/TwoLightType.kt
+
+ 77. com.mpdc4gsr.libunified.app.menu.view.ColorView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/menu/view/ColorView.kt
+
+ 78. com.mpdc4gsr.libunified.app.repository.ProductBean
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/repository/ProductBean.kt
+
+ 79. com.mpdc4gsr.libunified.app.repository.TS004ResponseFile
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/repository/TS004ResponseFile.kt
+
+ 80. com.mpdc4gsr.libunified.app.repository.WsResponse
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/repository/WsResponse.kt
+
+ 81. com.mpdc4gsr.libunified.app.tools.CheckDoubleClick
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/CheckDoubleClick.kt
+
+ 82. com.mpdc4gsr.libunified.app.tools.InputTextFilterTools
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/InputTextFilterTools.kt
+
+ 83. com.mpdc4gsr.libunified.app.tools.LanguageTools
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/LanguageTools.kt
+
+ 84. com.mpdc4gsr.libunified.app.tools.LocaleContextWrapper
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/LocaleContextWrapper.java
+
+ 85. com.mpdc4gsr.libunified.app.tools.ScreenTools
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/ScreenTools.kt
+
+ 86. com.mpdc4gsr.libunified.app.tools.SpanBuilder
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/SpanBuilder.kt
+
+ 87. com.mpdc4gsr.libunified.app.tools.VersionTools
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/VersionTools.kt
+
+ 88. com.mpdc4gsr.libunified.app.utils.AppUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/AppUtils.java
+
+ 89. com.mpdc4gsr.libunified.app.utils.BluetoothUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/BluetoothUtils.kt
+
+ 90. com.mpdc4gsr.libunified.app.utils.EasyWifi
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/EasyWifi.java
+
+ 91. com.mpdc4gsr.libunified.app.utils.ImageUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/ImageUtils.kt
+
+ 92. com.mpdc4gsr.libunified.app.utils.LocationUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/LocationUtils.kt
+
+ 93. com.mpdc4gsr.libunified.app.utils.PermissionUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/PermissionUtils.kt
+
+ 94. com.mpdc4gsr.libunified.app.utils.TemperatureUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/TemperatureUtils.kt
+
+ 95. com.mpdc4gsr.libunified.app.utils.UnifiedArrayUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedArrayUtils.kt
+
+ 96. com.mpdc4gsr.libunified.app.utils.UnifiedCameraUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedCameraUtils.kt
+
+ 97. com.mpdc4gsr.libunified.app.utils.UnifiedCleanupUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedCleanupUtils.kt
+
+ 98. com.mpdc4gsr.libunified.app.utils.UnifiedConfigUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedConfigUtils.kt
+
+ 99. com.mpdc4gsr.libunified.app.utils.UnifiedConstants
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedConstants.kt
+
+100. com.mpdc4gsr.libunified.app.utils.UnifiedDataWriterUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedDataWriterUtils.kt
+
+101. com.mpdc4gsr.libunified.app.utils.UnifiedFinalUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedFinalUtils.kt
+
+102. com.mpdc4gsr.libunified.app.utils.UnifiedGsrUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedGsrUtils.kt
+
+103. com.mpdc4gsr.libunified.app.utils.UnifiedHexUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedHexUtils.kt
+
+104. com.mpdc4gsr.libunified.app.utils.UnifiedTimeUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/UnifiedTimeUtils.kt
+
+105. com.mpdc4gsr.libunified.app.view.ImageEditView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/view/ImageEditView.kt
+
+106. com.mpdc4gsr.libunified.app.view.MainTitleView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/view/MainTitleView.kt
+
+107. com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/viewmodel/FirmwareViewModel.kt
+
+108. com.mpdc4gsr.libunified.app.viewmodel.ModernFirmwareViewModel
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/app/viewmodel/ModernFirmwareViewModel.kt
+
+109. com.mpdc4gsr.libunified.compat.DimensionExt
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/compat/DimensionExt.kt
+
+110. com.mpdc4gsr.libunified.ir.CrashHandler
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/CrashHandler.java
+
+111. com.mpdc4gsr.libunified.ir.android.yt.jni.Usbcontorl
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/android/yt/jni/Usbcontorl.java
+
+112. com.mpdc4gsr.libunified.ir.event.PreviewComplete
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/event/PreviewComplete.kt
+
+113. com.mpdc4gsr.libunified.ir.inf.IDualListener
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/inf/IDualListener.kt
+
+114. com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/thread/ImageThreadTC.java
+
+115. com.mpdc4gsr.libunified.ir.tools.BitmapTools
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/tools/BitmapTools.kt
+
+116. com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithManualAlignExternalCamera
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/usbdual/camera/DualViewWithManualAlignExternalCamera.java
+
+117. com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorDualManager
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/usbdual/camera/USBMonitorDualManager.java
+
+118. com.mpdc4gsr.libunified.ir.utils.HomoFilter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/HomoFilter.java
+
+119. com.mpdc4gsr.libunified.ir.utils.OnlineMethod
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/OnlineMethod.java
+
+120. com.mpdc4gsr.libunified.ir.utils.PseudocolorModeTable
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/PseudocolorModeTable.java
+
+121. com.mpdc4gsr.libunified.ir.utils.SharedPreferencesUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/SharedPreferencesUtils.java
+
+122. com.mpdc4gsr.libunified.ir.utils.SupRUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/SupRUtils.kt
+
+123. com.mpdc4gsr.libunified.ir.utils.ViewStubUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/ViewStubUtils.kt
+
+124. com.mpdc4gsr.libunified.ir.view.CaliperImageView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/CaliperImageView.kt
+
+125. com.mpdc4gsr.libunified.ir.view.DragScaleView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/DragScaleView.java
+
+126. com.mpdc4gsr.libunified.ir.view.DragViewUtils
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/DragViewUtils.java
+
+127. com.mpdc4gsr.libunified.ir.view.ZoomCaliperView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/ZoomCaliperView.kt
+
+128. com.mpdc4gsr.libunified.ir.view.ZoomableDraggableView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/ZoomableDraggableView.java
+
+129. com.mpdc4gsr.libunified.ui.SettingNightView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/SettingNightView.kt
+
+130. com.mpdc4gsr.libunified.ui.bean.ColorBean
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/bean/ColorBean.kt
+
+131. com.mpdc4gsr.libunified.ui.charts.BubbleChart
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/charts/BubbleChart.java
+
+132. com.mpdc4gsr.libunified.ui.charts.CandleStickChart
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/charts/CandleStickChart.java
+
+133. com.mpdc4gsr.libunified.ui.components.MarkerImage
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/components/MarkerImage.java
+
+134. com.mpdc4gsr.libunified.ui.data.BarDataSet
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/BarDataSet.java
+
+135. com.mpdc4gsr.libunified.ui.data.BubbleDataSet
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/BubbleDataSet.java
+
+136. com.mpdc4gsr.libunified.ui.data.CandleDataSet
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/CandleDataSet.java
+
+137. com.mpdc4gsr.libunified.ui.data.RadarDataSet
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/RadarDataSet.java
+
+138. com.mpdc4gsr.libunified.ui.data.filter.Approximator
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/data/filter/Approximator.java
+
+139. com.mpdc4gsr.libunified.ui.exception.DrawingDataSetNotCreatedException
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/exception/DrawingDataSetNotCreatedException.java
+
+140. com.mpdc4gsr.libunified.ui.formatter.ColorFormatter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/formatter/ColorFormatter.java
+
+141. com.mpdc4gsr.libunified.ui.formatter.LargeValueFormatter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/formatter/LargeValueFormatter.java
+
+142. com.mpdc4gsr.libunified.ui.formatter.PercentFormatter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/formatter/PercentFormatter.java
+
+143. com.mpdc4gsr.libunified.ui.formatter.StackedValueFormatter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/formatter/StackedValueFormatter.java
+
+144. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.BirthdayPicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/BirthdayPicker.java
+
+145. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.CarPlatePicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/CarPlatePicker.java
+
+146. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.ConstellationPicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/ConstellationPicker.java
+
+147. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.DatimePicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/DatimePicker.java
+
+148. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.EthnicPicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/EthnicPicker.java
+
+149. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.NumberPicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/NumberPicker.java
+
+150. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.PhoneCodePicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/PhoneCodePicker.java
+
+151. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.SexPicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/SexPicker.java
+
+152. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.StrArrayPicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/StrArrayPicker.java
+
+153. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.TimePicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/TimePicker.java
+
+154. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.YearPicker
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/YearPicker.java
+
+155. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.impl.SimpleWheelFormatter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/impl/SimpleWheelFormatter.java
+
+156. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.impl.UnitDateFormatter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/impl/UnitDateFormatter.java
+
+157. com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.impl.UnitTimeFormatter
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelpicker/impl/UnitTimeFormatter.java
+
+158. com.mpdc4gsr.libunified.ui.listener.OnDrawLineChartTouchListener
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/listener/OnDrawLineChartTouchListener.java
+
+159. com.mpdc4gsr.libunified.ui.matrix.Vector3
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/matrix/Vector3.java
+
+160. com.mpdc4gsr.libunified.ui.utils.EntryXComparator
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/utils/EntryXComparator.java
+
+161. com.mpdc4gsr.libunified.ui.widget.BatteryView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/BatteryView.kt
+
+162. com.mpdc4gsr.libunified.ui.widget.Comm3DSeekBar
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/Comm3DSeekBar.kt
+
+163. com.mpdc4gsr.libunified.ui.widget.IndicateView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/IndicateView.java
+
+164. com.mpdc4gsr.libunified.ui.widget.MarqueeButton
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/MarqueeButton.kt
+
+165. com.mpdc4gsr.libunified.ui.widget.MarqueeText
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/MarqueeText.kt
+
+166. com.mpdc4gsr.libunified.ui.widget.MyItemDecoration
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/MyItemDecoration.kt
+
+167. com.mpdc4gsr.libunified.ui.widget.NoScrollViewPager
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/NoScrollViewPager.kt
+
+168. com.mpdc4gsr.libunified.ui.widget.RadioGroupPlus
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/RadioGroupPlus.kt
+
+169. com.mpdc4gsr.libunified.ui.widget.RoundImageView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/RoundImageView.kt
+
+170. com.mpdc4gsr.libunified.ui.widget.SteeringWheelView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/SteeringWheelView.kt
+
+171. com.mpdc4gsr.libunified.ui.widget.TipsSeekBar
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/TipsSeekBar.kt
+
+172. com.mpdc4gsr.libunified.ui.widget.WifiSteeringWheelView
+     File: /home/runner/work/IRCamera/IRCamera/libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/WifiSteeringWheelView.kt
+
+173. com.mpdc4gsr.module.thermalunified.activity.AlgorithmImageComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/AlgorithmImageComposeActivity.kt
+
+174. com.mpdc4gsr.module.thermalunified.activity.BaseIRComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/BaseIRComposeActivity.kt
+
+175. com.mpdc4gsr.module.thermalunified.activity.BaseIRPlusComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/BaseIRPlusComposeActivity.kt
+
+176. com.mpdc4gsr.module.thermalunified.activity.BaseIRPlusFragment
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/BaseIRPlusFragment.kt
+
+177. com.mpdc4gsr.module.thermalunified.activity.IRCameraSettingComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IRCameraSettingComposeActivity.kt
+
+178. com.mpdc4gsr.module.thermalunified.activity.IRCorrectionComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IRCorrectionComposeActivity.kt
+
+179. com.mpdc4gsr.module.thermalunified.activity.IREmissivityComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IREmissivityComposeActivity.kt
+
+180. com.mpdc4gsr.module.thermalunified.activity.IRLogMPChartComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IRLogMPChartComposeActivity.kt
+
+181. com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartLiteComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IRMonitorChartLiteComposeActivity.kt
+
+182. com.mpdc4gsr.module.thermalunified.activity.IRThermalDoubleComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IRThermalDoubleComposeActivity.kt
+
+183. com.mpdc4gsr.module.thermalunified.activity.ImageColorComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/ImageColorComposeActivity.kt
+
+184. com.mpdc4gsr.module.thermalunified.activity.ManualStep1ComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/ManualStep1ComposeActivity.kt
+
+185. com.mpdc4gsr.module.thermalunified.activity.MonitorLogComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/MonitorLogComposeActivity.kt
+
+186. com.mpdc4gsr.module.thermalunified.activity.ReportPreviewComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/ReportPreviewComposeActivity.kt
+
+187. com.mpdc4gsr.module.thermalunified.adapter.CameraItemAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/CameraItemAdapter.kt
+
+188. com.mpdc4gsr.module.thermalunified.adapter.ConfigEmAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/ConfigEmAdapter.kt
+
+189. com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/GalleryAdapter.kt
+
+190. com.mpdc4gsr.module.thermalunified.adapter.MeasureItemAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/MeasureItemAdapter.kt
+
+191. com.mpdc4gsr.module.thermalunified.adapter.MenuRecyclerView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/MenuRecyclerView.kt
+
+192. com.mpdc4gsr.module.thermalunified.adapter.MonitorLogAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/MonitorLogAdapter.kt
+
+193. com.mpdc4gsr.module.thermalunified.adapter.PDFAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/PDFAdapter.kt
+
+194. com.mpdc4gsr.module.thermalunified.adapter.ReportPreviewAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/ReportPreviewAdapter.kt
+
+195. com.mpdc4gsr.module.thermalunified.adapter.SettingCheckAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/SettingCheckAdapter.kt
+
+196. com.mpdc4gsr.module.thermalunified.adapter.SettingTimeAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/SettingTimeAdapter.kt
+
+197. com.mpdc4gsr.module.thermalunified.adapter.TargetItemAdapter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/adapter/TargetItemAdapter.kt
+
+198. com.mpdc4gsr.module.thermalunified.base.BaseThermalFragment
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/base/BaseThermalFragment.kt
+
+199. com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/bean/SelectPositionBean.kt
+
+200. com.mpdc4gsr.module.thermalunified.builder.GSYVideoOptionBuilder
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/builder/GSYVideoOptionBuilder.kt
+
+201. com.mpdc4gsr.module.thermalunified.chart.MyValueFormatter
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/chart/MyValueFormatter.kt
+
+202. com.mpdc4gsr.module.thermalunified.compat.DimensionExt
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compat/DimensionExt.kt
+
+203. com.mpdc4gsr.module.thermalunified.compose.ChartLogCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ChartLogCompose.kt
+
+204. com.mpdc4gsr.module.thermalunified.compose.ChartTrendCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ChartTrendCompose.kt
+
+205. com.mpdc4gsr.module.thermalunified.compose.CompassCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/CompassCompose.kt
+
+206. com.mpdc4gsr.module.thermalunified.compose.ConfigGuideDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ConfigGuideDialogCompose.kt
+
+207. com.mpdc4gsr.module.thermalunified.compose.DistanceMeasureCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/DistanceMeasureCompose.kt
+
+208. com.mpdc4gsr.module.thermalunified.compose.EmissivityCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/EmissivityCompose.kt
+
+209. com.mpdc4gsr.module.thermalunified.compose.HikSurfaceCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/HikSurfaceCompose.kt
+
+210. com.mpdc4gsr.module.thermalunified.compose.HomeGuideDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/HomeGuideDialogCompose.kt
+
+211. com.mpdc4gsr.module.thermalunified.compose.IRConfigInputDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/IRConfigInputDialogCompose.kt
+
+212. com.mpdc4gsr.module.thermalunified.compose.LayoutComponentsCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/LayoutComponentsCompose.kt
+
+213. com.mpdc4gsr.module.thermalunified.compose.TargetBarPickCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/TargetBarPickCompose.kt
+
+214. com.mpdc4gsr.module.thermalunified.compose.Temperature07Compose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/Temperature07Compose.kt
+
+215. com.mpdc4gsr.module.thermalunified.compose.TemperatureEditCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/TemperatureEditCompose.kt
+
+216. com.mpdc4gsr.module.thermalunified.compose.ThermalAdaptersCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalAdaptersCompose.kt
+
+217. com.mpdc4gsr.module.thermalunified.compose.ThermalFragmentPatterns
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalFragmentPatterns.kt
+
+218. com.mpdc4gsr.module.thermalunified.compose.ThermalInputDialogCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalInputDialogCompose.kt
+
+219. com.mpdc4gsr.module.thermalunified.compose.ThermalNavigationCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalNavigationCompose.kt
+
+220. com.mpdc4gsr.module.thermalunified.compose.ThermalPopupsCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalPopupsCompose.kt
+
+221. com.mpdc4gsr.module.thermalunified.compose.ThermalReportCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalReportCompose.kt
+
+222. com.mpdc4gsr.module.thermalunified.compose.ThermalStubsCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalStubsCompose.kt
+
+223. com.mpdc4gsr.module.thermalunified.compose.ThermalToolsCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalToolsCompose.kt
+
+224. com.mpdc4gsr.module.thermalunified.compose.ThermalUtilsCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/ThermalUtilsCompose.kt
+
+225. com.mpdc4gsr.module.thermalunified.compose.TrendViewCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/TrendViewCompose.kt
+
+226. com.mpdc4gsr.module.thermalunified.compose.VideoPlayerCompose
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/VideoPlayerCompose.kt
+
+227. com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/event/CorrectionFinishEvent.java
+
+228. com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/event/GalleryAddEvent.kt
+
+229. com.mpdc4gsr.module.thermalunified.event.GalleryDirChangeEvent
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/event/GalleryDirChangeEvent.kt
+
+230. com.mpdc4gsr.module.thermalunified.event.GalleryDownloadEvent
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/event/GalleryDownloadEvent.kt
+
+231. com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/event/ImageGalleryEvent.kt
+
+232. com.mpdc4gsr.module.thermalunified.event.ManualFinishBean
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/event/ManualFinishBean.kt
+
+233. com.mpdc4gsr.module.thermalunified.event.MonitorCreateEvent
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/event/MonitorCreateEvent.kt
+
+234. com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/event/MonitorSaveEvent.kt
+
+235. com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoComposeFragment
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/fragment/GalleryVideoComposeFragment.kt
+
+236. com.mpdc4gsr.module.thermalunified.fragment.IRCorrectionComposeFragment
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/fragment/IRCorrectionComposeFragment.kt
+
+237. com.mpdc4gsr.module.thermalunified.fragment.IRGalleryComposeFragment
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/fragment/IRGalleryComposeFragment.kt
+
+238. com.mpdc4gsr.module.thermalunified.fragment.IRPlushComposeFragment
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/fragment/IRPlushComposeFragment.kt
+
+239. com.mpdc4gsr.module.thermalunified.frame.FrameTools
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/frame/FrameTools.kt
+
+240. com.mpdc4gsr.module.thermalunified.player.PlayerFactory
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/player/PlayerFactory.kt
+
+241. com.mpdc4gsr.module.thermalunified.player.SystemPlayerManager
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/player/SystemPlayerManager.kt
+
+242. com.mpdc4gsr.module.thermalunified.report.activity.ReportDetailComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/activity/ReportDetailComposeActivity.kt
+
+243. com.mpdc4gsr.module.thermalunified.report.activity.ReportPreviewFirstComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/activity/ReportPreviewFirstComposeActivity.kt
+
+244. com.mpdc4gsr.module.thermalunified.report.bean.ReportPageBean
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/bean/ReportPageBean.kt
+
+245. com.mpdc4gsr.module.thermalunified.report.view.ReportIRInputView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/view/ReportIRInputView.kt
+
+246. com.mpdc4gsr.module.thermalunified.report.view.ReportIRShowView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/view/ReportIRShowView.kt
+
+247. com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/view/ReportInfoView.kt
+
+248. com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/view/WatermarkView.kt
+
+249. com.mpdc4gsr.module.thermalunified.report.viewmodel.ModernPdfViewModel
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/viewmodel/ModernPdfViewModel.kt
+
+250. com.mpdc4gsr.module.thermalunified.report.viewmodel.UpReportViewModel
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/report/viewmodel/UpReportViewModel.kt
+
+251. com.mpdc4gsr.module.thermalunified.repository.ThermalDataRepository
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/repository/ThermalDataRepository.kt
+
+252. com.mpdc4gsr.module.thermalunified.stubs.FenceViews
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/stubs/FenceViews.kt
+
+253. com.mpdc4gsr.module.thermalunified.stubs.GuideStubs
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/stubs/GuideStubs.kt
+
+254. com.mpdc4gsr.module.thermalunified.stubs.MonitorSelectDialogStub
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/stubs/MonitorSelectDialogStub.kt
+
+255. com.mpdc4gsr.module.thermalunified.stubs.UIWidgets
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/stubs/UIWidgets.kt
+
+256. com.mpdc4gsr.module.thermalunified.tools.CoilImageEngine
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/tools/CoilImageEngine.kt
+
+257. com.mpdc4gsr.module.thermalunified.tools.ThermalTools
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/tools/ThermalTools.kt
+
+258. com.mpdc4gsr.module.thermalunified.tools.medie.YapVideoEncoder
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/tools/medie/YapVideoEncoder.kt
+
+259. com.mpdc4gsr.module.thermalunified.tools.medie.YapVideoUtils
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/tools/medie/YapVideoUtils.kt
+
+260. com.mpdc4gsr.module.thermalunified.utils.ArrayUtils
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/ArrayUtils.kt
+
+261. com.mpdc4gsr.module.thermalunified.utils.CalibrationTools
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/CalibrationTools.kt
+
+262. com.mpdc4gsr.module.thermalunified.utils.CommonUtils
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/CommonUtils.kt
+
+263. com.mpdc4gsr.module.thermalunified.utils.CompassCalUtils
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/CompassCalUtils.kt
+
+264. com.mpdc4gsr.module.thermalunified.utils.IRImageUtils
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/IRImageUtils.kt
+
+265. com.mpdc4gsr.module.thermalunified.utils.ImageColorTools
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/ImageColorTools.java
+
+266. com.mpdc4gsr.module.thermalunified.utils.IrConst
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/IrConst.kt
+
+267. com.mpdc4gsr.module.thermalunified.video.AudioRecordHelp
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/video/AudioRecordHelp.kt
+
+268. com.mpdc4gsr.module.thermalunified.video.StandardGSYVideoPlayer
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/video/StandardGSYVideoPlayer.kt
+
+269. com.mpdc4gsr.module.thermalunified.video.VideoRecordMedia
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/video/VideoRecordMedia.kt
+
+270. com.mpdc4gsr.module.thermalunified.view.ChartLogView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/ChartLogView.kt
+
+271. com.mpdc4gsr.module.thermalunified.view.ChartMonitorView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/ChartMonitorView.kt
+
+272. com.mpdc4gsr.module.thermalunified.view.ChartTrendView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/ChartTrendView.kt
+
+273. com.mpdc4gsr.module.thermalunified.view.DetectHorizontalScrollView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/DetectHorizontalScrollView.java
+
+274. com.mpdc4gsr.module.thermalunified.view.DistanceMeasureView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/DistanceMeasureView.kt
+
+275. com.mpdc4gsr.module.thermalunified.view.EmissivityView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/EmissivityView.kt
+
+276. com.mpdc4gsr.module.thermalunified.view.MoveImageView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/MoveImageView.java
+
+277. com.mpdc4gsr.module.thermalunified.view.MyGSYVideoPlayer
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/MyGSYVideoPlayer.kt
+
+278. com.mpdc4gsr.module.thermalunified.view.TargetBarPickView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/TargetBarPickView.kt
+
+279. com.mpdc4gsr.module.thermalunified.view.Temperature07View
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/Temperature07View.kt
+
+280. com.mpdc4gsr.module.thermalunified.view.TemperatureEditView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/TemperatureEditView.kt
+
+281. com.mpdc4gsr.module.thermalunified.view.TimeDownView
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/TimeDownView.kt
+
+282. com.mpdc4gsr.module.thermalunified.view.compass.MagQualityCompassWrapper
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/compass/MagQualityCompassWrapper.kt
+
+283. com.mpdc4gsr.module.thermalunified.viewmodel.IRMainActivityViewModel
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/viewmodel/IRMainActivityViewModel.kt
+
+284. com.mpdc4gsr.module.thermalunified.viewmodel.ThermalRGBPreviewViewModel
+     File: /home/runner/work/IRCamera/IRCamera/component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/viewmodel/ThermalRGBPreviewViewModel.kt
+
+285. com.mpdc4gsr.module.user.compose.DownloadProgressDialog
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/compose/DownloadProgressDialog.kt
+
+286. com.mpdc4gsr.module.user.compose.FirmwareInstallDialog
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/compose/FirmwareInstallDialog.kt
+
+287. com.mpdc4gsr.module.user.compose.MineComposeFragment
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/compose/MineComposeFragment.kt
+
+288. com.mpdc4gsr.module.user.util.ActivityUtils
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/util/ActivityUtils.java
+
+289. com.mpdc4gsr.module.user.view.DragCustomerView
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/view/DragCustomerView.java
+
+290. com.mpdc4gsr.module.user.view.ListItemView
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/view/ListItemView.kt
+
+291. com.mpdc4gsr.module.user.view.ProgressBarView
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/view/ProgressBarView.java
+
+292. com.mpdc4gsr.module.user.viewmodel.MineViewModel
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/viewmodel/MineViewModel.kt
+
+293. com.mpdc4gsr.module.user.viewmodel.MoreFragmentComposeViewModel
+     File: /home/runner/work/IRCamera/IRCamera/component/user/src/main/java/com/mpdc4gsr/module/user/viewmodel/MoreFragmentComposeViewModel.kt
+
+294. com.topdon.ble.RequestBuilderFactory
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/ble/RequestBuilderFactory.java
+
+295. com.topdon.ble.callback.ReadDescriptorCallback
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/ble/callback/ReadDescriptorCallback.java
+
+296. com.topdon.commons.BleObserver
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/BleObserver.java
+
+297. com.topdon.commons.MyEvent
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/MyEvent.java
+
+298. com.topdon.commons.UUIDManager
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/UUIDManager.java
+
+299. com.topdon.commons.base.AppHolder
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/AppHolder.java
+
+300. com.topdon.commons.base.SaveBean
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/SaveBean.java
+
+301. com.topdon.commons.base.entity.AbstractTimer
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/entity/AbstractTimer.java
+
+302. com.topdon.commons.base.entity.CheckableParcelable
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/entity/CheckableParcelable.java
+
+303. com.topdon.commons.base.entity.DatabaseContext
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/entity/DatabaseContext.java
+
+304. com.topdon.commons.base.entity.UnitDBBean
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/entity/UnitDBBean.java
+
+305. com.topdon.commons.base.interfaces.DrawableBuilder
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/interfaces/DrawableBuilder.java
+
+306. com.topdon.commons.base.interfaces.IText
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/interfaces/IText.java
+
+307. com.topdon.commons.base.interfaces.IWeight
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/base/interfaces/IWeight.java
+
+308. com.topdon.commons.helper.PermissionsRequester
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/helper/PermissionsRequester.java
+
+309. com.topdon.commons.util.DiagnoseEventBusBean
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/util/DiagnoseEventBusBean.java
+
+310. com.topdon.commons.util.UnicodeReader
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/util/UnicodeReader.java
+
+311. com.topdon.commons.util.WeakReferenceHandler
+     File: /home/runner/work/IRCamera/IRCamera/BleModule/src/main/java/com/topdon/commons/util/WeakReferenceHandler.java
+
+312. mpdc4gsr.core.BackgroundScanningIntegrationTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/BackgroundScanningIntegrationTest.kt
+
+313. mpdc4gsr.core.background.WorkManagerConfiguration
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/background/WorkManagerConfiguration.kt
+
+314. mpdc4gsr.core.data.GSRDataRepository
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/data/GSRDataRepository.kt
+
+315. mpdc4gsr.core.data.LSLGSROutlet
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/data/LSLGSROutlet.kt
+
+316. mpdc4gsr.core.data.RecordingDataClasses
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/data/RecordingDataClasses.kt
+
+317. mpdc4gsr.core.data.SensorDataRepository
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/data/SensorDataRepository.kt
+
+318. mpdc4gsr.core.data.model.SessionModels
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/data/model/SessionModels.kt
+
+319. mpdc4gsr.core.data.utils.VersionUtils
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/data/utils/VersionUtils.kt
+
+320. mpdc4gsr.core.di.AppContainer
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/di/AppContainer.kt
+
+321. mpdc4gsr.core.di.AppContainerExt
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/di/AppContainerExt.kt
+
+322. mpdc4gsr.core.monitoring.PerformanceMetricsTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/core/monitoring/PerformanceMetricsTest.kt
+
+323. mpdc4gsr.core.monitoring.TelemetryManagerTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/core/monitoring/TelemetryManagerTest.kt
+
+324. mpdc4gsr.core.threading.MonitoredMainThreadPoster
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/threading/MonitoredMainThreadPoster.kt
+
+325. mpdc4gsr.core.ui.PermissionRequestScreen
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/PermissionRequestScreen.kt
+
+326. mpdc4gsr.core.ui.SafeMainThreadHandler
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/SafeMainThreadHandler.kt
+
+327. mpdc4gsr.core.ui.SafeRippleModifier
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/SafeRippleModifier.kt
+
+328. mpdc4gsr.core.ui.ThermalComposeIntegration
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/ThermalComposeIntegration.kt
+
+329. mpdc4gsr.core.ui.components.DeleteConfirmationDialog
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/components/DeleteConfirmationDialog.kt
+
+330. mpdc4gsr.core.ui.components.RecordingControlsCompose
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/components/RecordingControlsCompose.kt
+
+331. mpdc4gsr.core.ui.components.RecordingStatusCompose
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/components/RecordingStatusCompose.kt
+
+332. mpdc4gsr.core.ui.components.SensorSelectionCompose
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/components/SensorSelectionCompose.kt
+
+333. mpdc4gsr.core.ui.components.ThermalVisualizationCard
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/components/ThermalVisualizationCard.kt
+
+334. mpdc4gsr.core.ui.components.sensors.ComprehensiveSensorStatusCompose
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/components/sensors/ComprehensiveSensorStatusCompose.kt
+
+335. mpdc4gsr.core.ui.components.settings.SettingsComponents
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/components/settings/SettingsComponents.kt
+
+336. mpdc4gsr.core.ui.model.SensorModels
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/model/SensorModels.kt
+
+337. mpdc4gsr.core.ui.utils.ComposeInterop
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/utils/ComposeInterop.kt
+
+338. mpdc4gsr.core.ui.utils.ViewModelExtensions
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/utils/ViewModelExtensions.kt
+
+339. mpdc4gsr.core.utils.DimensionUtils
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/utils/DimensionUtils.kt
+
+340. mpdc4gsr.feature.camera.data.CameraErrorMessageProvider
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/camera/data/CameraErrorMessageProvider.kt
+
+341. mpdc4gsr.feature.camera.ui.Camera2SystemValidator
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/camera/ui/Camera2SystemValidator.kt
+
+342. mpdc4gsr.feature.camera.ui.CameraSettingsCompose
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/camera/ui/CameraSettingsCompose.kt
+
+343. mpdc4gsr.feature.camera.ui.CameraStatusCompose
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/camera/ui/CameraStatusCompose.kt
+
+344. mpdc4gsr.feature.camera.ui.TapToFocusCompose
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/camera/ui/TapToFocusCompose.kt
+
+345. mpdc4gsr.feature.gsr.data.EnhancedThermalRecorder
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/data/EnhancedThermalRecorder.kt
+
+346. mpdc4gsr.feature.gsr.data.GSRPlotDataModels
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/data/GSRPlotDataModels.kt
+
+347. mpdc4gsr.feature.gsr.domain.usecase.ShimmerUseCases
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/domain/usecase/ShimmerUseCases.kt
+
+348. mpdc4gsr.feature.gsr.ui.GSRDataViewerScreen
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRDataViewerScreen.kt
+
+349. mpdc4gsr.feature.gsr.ui.GSRGalleryComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRGalleryComposeActivity.kt
+
+350. mpdc4gsr.feature.gsr.ui.GSRQuickRecordingComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRQuickRecordingComposeActivity.kt
+
+351. mpdc4gsr.feature.gsr.ui.GSRRawImageViewComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRRawImageViewComposeActivity.kt
+
+352. mpdc4gsr.feature.gsr.ui.GSRScreens
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRScreens.kt
+
+353. mpdc4gsr.feature.gsr.ui.GSRVideoPlayerScreen
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRVideoPlayerScreen.kt
+
+354. mpdc4gsr.feature.gsr.ui.MultiModalRecordingScreen
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/MultiModalRecordingScreen.kt
+
+355. mpdc4gsr.feature.gsr.ui.SessionExportComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/SessionExportComposeActivity.kt
+
+356. mpdc4gsr.feature.gsr.ui.SessionManagerScreen
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/gsr/ui/SessionManagerScreen.kt
+
+357. mpdc4gsr.feature.main.ui.ComposeScreens
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/main/ui/ComposeScreens.kt
+
+358. mpdc4gsr.feature.main.ui.UnifiedComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/main/ui/UnifiedComposeActivity.kt
+
+359. mpdc4gsr.feature.network.data.CommandServer
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/CommandServer.kt
+
+360. mpdc4gsr.feature.network.data.HardwareValidationController
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/HardwareValidationController.kt
+
+361. mpdc4gsr.feature.network.data.MainRecordingController
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/MainRecordingController.kt
+
+362. mpdc4gsr.feature.network.data.NetworkLogger
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/NetworkLogger.kt
+
+363. mpdc4gsr.feature.network.data.NetworkSuspendExtensions
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/NetworkSuspendExtensions.kt
+
+364. mpdc4gsr.feature.network.data.PcServerDiscovery
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/PcServerDiscovery.kt
+
+365. mpdc4gsr.feature.network.data.PreviewIntegration
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/PreviewIntegration.kt
+
+366. mpdc4gsr.feature.network.data.RecordingTypes
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/RecordingTypes.kt
+
+367. mpdc4gsr.feature.network.data.ShimmerNetworkClient
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/ShimmerNetworkClient.kt
+
+368. mpdc4gsr.feature.network.data.UnifiedDataStreamingService
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/network/data/UnifiedDataStreamingService.kt
+
+369. mpdc4gsr.feature.settings.ui.PolicyScreen
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/settings/ui/PolicyScreen.kt
+
+370. mpdc4gsr.feature.testing.presentation.TestingPatternsViewModel
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/testing/presentation/TestingPatternsViewModel.kt
+
+371. mpdc4gsr.feature.testing.ui.ComposeMigrationLauncherActivity
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/testing/ui/ComposeMigrationLauncherActivity.kt
+
+372. mpdc4gsr.feature.testing.ui.ComprehensiveIntegrationTestActivity
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/testing/ui/ComprehensiveIntegrationTestActivity.kt
+
+373. mpdc4gsr.feature.testing.ui.PerformanceBenchmarkComposeActivity
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/testing/ui/PerformanceBenchmarkComposeActivity.kt
+
+374. mpdc4gsr.feature.testing.ui.TestingComponents
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/testing/ui/TestingComponents.kt
+
+375. mpdc4gsr.feature.thermal.domain.usecase.ThermalUseCases
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/thermal/domain/usecase/ThermalUseCases.kt
+
+376. mpdc4gsr.feature.thermal.ui.AdaptiveThermalStreamer
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/thermal/ui/AdaptiveThermalStreamer.kt
+
+377. mpdc4gsr.feature.thermal.ui.ReportCreationScreen
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/thermal/ui/ReportCreationScreen.kt
+
+378. mpdc4gsr.feature.thermal.ui.ThermalCameraErrorRecoveryManager
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraErrorRecoveryManager.kt
+
+379. mpdc4gsr.feature.thermal.ui.ThermalUsbReceiver
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalUsbReceiver.kt
+
+380. mpdc4gsr.tests.ComposeTestStubs
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/ComposeTestStubs.kt
+
+381. mpdc4gsr.tests.DeviceEventManagementTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/DeviceEventManagementTest.kt
+
+382. mpdc4gsr.tests.ErrorHandlingTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/ErrorHandlingTest.kt
+
+383. mpdc4gsr.tests.FragmentToComposeMigrationTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/FragmentToComposeMigrationTest.kt
+
+384. mpdc4gsr.tests.GSRBluetoothDiscoveryTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/GSRBluetoothDiscoveryTest.kt
+
+385. mpdc4gsr.tests.GSRSensorReconnectionTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/GSRSensorReconnectionTest.kt
+
+386. mpdc4gsr.tests.LoggingFunctionalityTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/LoggingFunctionalityTest.kt
+
+387. mpdc4gsr.tests.MultiSensorCoordinationTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/MultiSensorCoordinationTest.kt
+
+388. mpdc4gsr.tests.NetworkProtocolIntegrationTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/androidTest/java/mpdc4gsr/tests/NetworkProtocolIntegrationTest.kt
+
+389. mpdc4gsr.tests.NetworkProtocolTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/NetworkProtocolTest.kt
+
+390. mpdc4gsr.tests.RecordingSettingsTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/RecordingSettingsTest.kt
+
+391. mpdc4gsr.tests.RgbCamera4KRecordingInstrumentationTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/androidTest/java/mpdc4gsr/tests/RgbCamera4KRecordingInstrumentationTest.kt
+
+392. mpdc4gsr.tests.RgbCameraPerformanceTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/RgbCameraPerformanceTest.kt
+
+393. mpdc4gsr.tests.ThermalCameraTC001HardwareTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/androidTest/java/mpdc4gsr/tests/ThermalCameraTC001HardwareTest.kt
+
+394. mpdc4gsr.tests.ThermalCameraUsbIntegrationTest
+     File: /home/runner/work/IRCamera/IRCamera/app/src/test/java/mpdc4gsr/tests/ThermalCameraUsbIntegrationTest.kt
+
+395. mpdc4gsr.ui_components.MyGLSurfaceView
+     File: /home/runner/work/IRCamera/IRCamera/app/src/main/java/mpdc4gsr/core/ui/components/MyGLSurfaceView.java
+
